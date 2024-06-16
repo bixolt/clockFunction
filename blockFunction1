@@ -1,0 +1,13 @@
+#tow typs of function one is for short things and seconed for copy and pase and in genarally to ceate some change according the marks and insert the arguments
+#blocks , lists ,(default argument a) ,id(pase)
+#We have amount of clock and amount of lists the contain values for the first step we need to chack if the amount of values in the list suit to the block and where write !a!
+#to insert the default argument as well as we have the default functions that need to happen first that no really functions that marks that do some kind of functionality every
+#time we just need to turn on the function that read the block accoroding the marks and do the things such as to appened some things or turn on some things that wrote the
+#in the short way with marks . In the other hand , we have every function that perimum that mean this function work with arguments and allow to it the parts of the block and 
+# allow to perform them with tow marks of the client , one this is the mark that can do just the function on the same place that can be several functions with a lot argument
+# and we have the mark that need to be with the id and functions and mark arguments etc... just this mark for perimum is allow "copy" and that mean we actually we can paste
+#this part in every block where we want , and we can do about the same part other functions or the same depaned about the mark that we write and the paste should to be with
+# <--{(B1,Elior_id),(F(a1,a2...)),(funtion1,function2...)}--> 
+# the copy should may to mark like this : beginning: >--__--<, the End >--{The same things just without the blockName}--< <- Why this is important the copy because the
+# part that we copy also can be with functions id ... but also something that global for every wanted block for adding .   
+#Of course that we will perform the perimum in the end ,and the most (in) will perform first . 
