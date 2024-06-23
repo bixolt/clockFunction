@@ -1,0 +1,251 @@
+#For summery of what we did in generaly at the data,apcacialPattern,dinamic and static data,stages of beginning run until the end (aprowimately without perform just big 
+# explanation) in reasechh 4 for our app we check all the possible way to inset data in dinamic/static way and understand the different actually figure out from stage 3
+#what need to get change and where the subdata should to be  and we arrived to this structure {category:{BigName:{exatlyName:[data]}}} because the category in general
+#are the same for every type of data and the function block or every guy that we wanna to get data about is get different every time and because of this we insert the 
+#data like this after is to create dinamic data like form we get this data just we run the loops or get every result that we need in the three stage (perform) that combined
+#three of things one is the response request... every data that we sum from the loops and read the blocks (in order to get this data we will use in the data itself 
+# for example with the pattern to recognize the exactly request that happened with marks at the block and after for example pull out the name of the function that we reaveled)
+# Ok so after we have the data from the block and more... in the form we actually in the stage 3 in this stage we will perform this things on the block with the data the form
+# and with the block of course in shortly word modify the block and insert back . So now the blocks place according the "mini-block"<-
+# default using blocks that we can chenge how we want put function argument and more and after paste in real-block and every real-block should to get this list of mini-function
+#and passibility to modify them and in the mark paste we can decide from which of real-block we want to pull out the spesific mini-block and using in arguments and function 
+# that we want and this get decide in the paste) <- in very shortly from 2 3 search about mini block and paste. 
+# and may more things that we will add , we must to plan the place of blocks , like the data structure in general so actually we have property that the same for block 
+#and just we insert idfferent data every time for different block (we have name of the real-block according the A1,B1,C1... and have the name of the mini-block with
+#a1,b1,c1...)  we will build this this place exactly the same of every static data and because of this we actually will build this place at the containing-object blocks
+#at the function createStatic <- because of this we will change the name of this function to createStaticAndBlocks 
+# we will the structuer we will use in order to filled the thing is it : [[[data],[the same category just different block get the data]],[other type of data ]]
+#or passible to put something like this direct in the function -> {typeData:{block:[]}}<- notice that the hendler of this building should to be slightly different 
+#here we don't have "exactly-block" like every data that have the name of the data like function and the exact like functionName1.
+#The resulting of the process is basically block that untill at str and that mean every function that in the system should to turn on just in the block and just in the end
+#of the process when we have the now list with new block according the requerments we can modify or eval it what mean also for the next stages of development we will may
+# develop system security of every block that we seccess to create (that mean every requerments in the block don't failed) have every mark of security block to user defending
+# if the user will turn on eval or something else that can risk the system . 
+
+# let's build what we did already : 
+import re
+def createStaticsAndBlocks(data=[[[['data']]],[['dataBlock']]],patternDefaultDatas=
+    {'patternData':{"property":{"dataName":{'sepesificThings':[]}}},'patternDefaultBlock':{'property':{'blockName':[]}}}):
+    for patternDefaultData,subData in zip(patternDefaultDatas,data):
+        for property,propertyList in zip(patternDefaultData,subData):
+            for dataNames,dataNamesList in zip(property,propertyList):
+                if patternDefaultData=='patternDefaultBlock':
+                    if not patternDefaultDatas[patternDefaultData][dataNames]:
+                        patternDefaultDatas[patternDefaultData][dataNames]=[]
+                    patternDefaultDatas[patternDefaultData][dataNames].append(dataNamesList)
+                    break
+                for sepesificThings,sepesificThingsList in zip(dataNames,dataNamesList):
+                    if not patternDefaultDatas[patternDefaultData][property][dataNames][sepesificThings]:
+                        patternDefaultDatas[patternDefaultData][property][dataNames][sepesificThings]=[]
+                    patternDefaultDatas[patternDefaultData][property][dataNames][sepesificThings].append(sepesificThingsList)
+    patternDefaultDatasFilled=patternDefaultDatas
+    return patternDefaultDatasFilled
+def createForm(patternDefaultDatasFilled):
+    form={'status':{},'response':{'error':{'request':{},'runing':{}}},'requests':{'precisely':{}},'name':{}}
+    #The meaning of "createForm" is actually create function that analyze the block from this data 'patternDefaultBlock':{'property':{'blockName':['data']}}'
+    # i.e for beginning we will do loops about the patternDefaultDatasFilled['blockItself'] and analyze the data from every time according the 'patternData' according what 
+    #we said we will fined the marks for any function that we need to turn on due to according the pattern . Notice in this case we will don't read and create and make 
+    #thing for the request and for the things that we reaveled in the block ,we just create the intentions check the request or every spacial things in the blocks 
+    #and bring to the form in exactly place for exactly thing
+    # "dinamic-data" becaus the "user" that use in this app can design and build according the input more precisely according the things that he write in the blocks that
+    # he want to change . in shortly this "form" actually say what we want exactly in the real-block and say every thing we want to change in our data .
+    #The stages of this function -> first we will discover every general mark like the version 3 with the pattern in the requestsListGenerally in the patternData 
+    #for each one of the block that and after this searching we check the request i.e the fixed of the mark that we found after we make the spesific pattern
+    #we findall and insert the organs in the list that soport this request for this spesific issue in shortly in this way we insert the data in exactly place for currently block
+    #in the form this just adding we also add soport of every checking or process that we do in this function to the form
+    #that mean after we write a code for this function 'createForm' we must to make function -> "performForm" in order to perform all the things wanted things according the 
+    # details we pick form the "createform" function .  
+    
+    additionaForm={'error':['request','runing'],'requests':['name',{'mark':[{'block':[]}]},'details',{'internal-request':['private-request-details']}]}
+    def additionFormFunction(form,additionaForm):
+        for typeOf,subDatas in additionaForm.items():
+            if not form[typeOf] in form:
+                  form[typeOf]={}
+        def insertInteranlData(subDatas,current_data=form[typeOf]):
+            if isinstance(subDatas,list):
+              for subData in subDatas:
+                 if not(isinstance(subData,dict)):
+                    if not current_data[subData] in current_data:
+                     current_data[subDatas]={}
+                 else:
+                     for key,value in zip(subData):
+                        if isinstance(value,list):
+                            if not key in current_data:
+                              current_data[key]={}
+                            insertInteranlData(current_data[key],subData)
+                        else:
+                          print('Insert new type of data in your form failed due to : incorrect placement.')
+                             
+            else:
+              print('Insert new type of data in your form failed due to : incorrect placement.')
+        insertInteranlData(subDatas)
+    additionFormFunction(form,additionaForm)
+    #In order to make to do this procces that will make all the sub data in the from and after to insert the fundamental data like id block where we need 
+    #we can in this case to do recursive when this statment happen isinstance(form[typeOf],dict) and create a list that will contain all the "key" we check and return any dict
+    #and after we will just call to the function that create the empty data in spesific place like this :
+    #But the problem with just put this function that we may more things in the same condition that mean may in this proccess form[key[i]]={} we delete thing in 
+    #the second we need to put second loop in order to get the value of and the key .
+    #In shortly we need to find way to call the function that turn on again the searching on the element issue and contain all of the keys that we have from this and 
+    #sparete the keys we need to active for every organ it self and to care about and so to put in . work with additionalForm and the form in the same time and in the runing 
+    #i.e to care about one thing in the additionalForm function and to add or do something in the Form in the same time that we decide for other fucntion or things .
+    #if we insert all the data in createSpesific we can catch it . 
+    dictNamesIssue={}
+    def addFormFundamental(form,DataNames):
+        dictNames={}
+        for issueNames,listNames in DataNames.items():
+            for issueName,listName in zip(issueNames,listNames):
+                dictNames[listName]={}
+            dictNamesIssue[issueName]=dictNames
+            dictNames={}
+        def insertIdDataForm(form):
+            for category in form:
+                if isinstance(category,dict):
+                  if category=={}:
+                      for dictNameIssue,content in dictNamesIssue.items():
+                          category[dictNameIssue]=content
+                  else:
+                      insertIdDataForm(category)
+                else:
+                    print('Failed to insert the fundamental data , your form incorrect')
+        insertIdDataForm(form)
+    addFormFundamental(form,patternDefaultDatasFilled['patternData']['names'])
+        #The names in patternData is dictonary that contain all the id name of every items for example form,patternDefaultDatasFilled['patternData']['names']['blocks]
+        #all the id block A1,B1,C1... and we want to insert all of these to all category in form
+    #after we will build this function we will know if we can insert the "neseccary-data" in the data in this function i.e combined things that neseccary for write soport
+    # in the form or write this things that consider to neseccary direct in createStaticsAndBlocks or in function that will run befor .  
+    #we wnat to check if in the place that we insert this data or at least the data that we want to create spesific in form as empty place or place with just these value 
+    #from the names dictionary in the data base
+        
+    for generalyPatternlist,block in zip(patternDefaultDatasFilled['patternData']['requestsListGenerally']['blocks'],patternDefaultDatasFilled['patternDefaultBlock']['real_block']):
+        #So basically the one argument zip is consistunet-list that contain in every list ,every passible generaly pattern for for this spesific mark in block
+        # and the the second argument is actually the all the "real-block" that we wrote in one list 
+        requestSpesificType=[]
+        idBlockPattern=re.compile(r'[A-Z]{1}/d+')
+        for generalyPattern in generalyPatternlist:
+            if re.findall(generalyPattern,block):
+              requestSpesificType.append(re.findall(generalyPattern,block))
+        idBlock=re.match(idBlockPattern,block[:-1])
+        if idBlock:
+          if idBlock.group() in patternDefaultDatasFilled['patternDefaultBlock']['blockNames']:
+            if not form['requests']['mark']['name']['block'][idBlock]: 
+              form['requests']['mark']['name']['block'][idBlock]=[]
+            form['requests']['mark']['name']['block'][idBlock].append(requestSpesificType)
+            requestSpesificType=[]
+          else:
+              form['response']['error']['request'].append(f"The requestMarks : {requestSpesificType} failed because the name block doesn't found in your store block")
+        else:   
+            form['response']['error']['request'].append(f"The requestMarks : {requestSpesificType} failed because the name block doesn't found in the spesific block")
+    preciselyPatternList=[]
+    for requestMark in form['requests']['block']['mark']:
+        for presicelymarkPattern in patternDefaultDatasFilled['patternData']['preciselyPattern']['block']:
+            combinedPattern=''
+            for presicelyStagePattern in presicelymarkPattern:
+                partNumber=True
+                combinedPattern=''
+                for presicelyPattern in presicelyStagePattern:
+                    pattern=re.compile(presicelyPattern)
+                    if partNumber==True:
+                        match=re.match(pattern,requestMark)
+                        partNumber=False
+                    else:
+                      match=re.search(pattern,requestMark)
+                    if match:
+                        combinedPattern+=presicelyPattern
+                        break
+                    elif presicelyPattern==presicelymarkPattern[-1]:
+                        form['response']['error']
+            preciselyPatternList.append(combinedPattern)
+    form['requests']['presicely']['block']=[]
+    form['requests']['presicely']['block'].append(preciselyPatternList)
+    #the reading function is actually the function that get the form and the and the blocks the data the function and more in order to perform everything that wanted in the 
+    #blocks and we will insert a new fiture that we will put in some kind of place code the symbols that we want for every shortly thing such as : shorted name to function 
+    #mark... and we will read also this data and perform the thing according to that and also i want to add one more fiture for save any reapitly thing that can happen such
+    #as when we create data base we actually sometime can do the same time for example put saperate things in the between the same anount of organ for example :
+    #we create constitunet list in some kind of place in the data for example in our patternData['requestsListGenerally']['blocks'] we wnat sparate with list 
+    #So for example instead of do this [[[elior],[elior]],[[banda],[banda]]] <- we will do this [elior,elior...] and mark according what we wnat this place in reapitdly 
+    #i.e repeat in order to do tow thing in one list and in big list .
+
+    #So we say that we want to use in to knowledge from the previous data in the code that we got one is the form and after is the patternDefaultDatasFilled (static-data)
+    #So we will work like that actually get the data form the form and my deliberately in this data taking is the requests for every thing that we try to do and every trying 
+    #of requerments that we try to do and every data no just from the form or the "default-static" data that we created may from other thing that can get on when we build and
+    # improve our system and want to perform these thing in the app , because in the our system that requered everything we want to actually perform in the block or in the
+    # result of the system just in the perform function .
+
+    #So in this case we must classes using and according the rules from Banda and to create class for every perform that can get on in the system for example the function 
+    # and more things in order to get on the part of perform that display the data that sended from the request about everything and about spesific thing of course 
+    # according the loop and container that design exactly for this case for comfortable or in the casethat we return the block that we insert to the function 
+    # these and more will insert in exactly place in the class with theory working OOP and in the end the objective is to sent the data all the data that can get happen 
+    # from this function and the classes and more that it contain . for example in the place that contain the data from the "server" or more presicely the place that contain 
+    #any of the report about request or insert , will do like that the class that suit get on and pick the data from the form and more place if needed  and insert this data 
+    #to container and after we can do what we want to this data or get some thing how we want with the method that in this case (class).
+    #In the "pttern-function" we combine the data that we have from the block i.e the data that we check and catch the from the place that contain the consistuent-list 
+    #and in the request for for the spesific doing and sperate to organ group and after we need to catch the return from func that do type of as to function and 
+    #analyze this knowledge and in order to recognize the request to use in it . in the inserting data in the exactly place at the block and the wnated block we need to 
+    #first understand where we need to put/do thing from the place that says the block wnated or the default block (itself) after we need to keep the exactly place in the 
+    #block with the spacial id that this doing have or at least the id that we bring after the keeping doing that knowledge need to prepared in the fundamental function that 
+    #responseability about it in this case the addFormFundamental and after paste the thing or do somthing that setting up in in this case that "perform on the block". 
+    #So the user-interface (that mean how the client will pull out the data and see any result that we want) we must figure out that that true we have a lot of data and 
+    #category to take care about ,but we create a value for user . So according this challenge we need to create cmfort combine place for every data that we get and 
+    # and turn on hendler about , and in this place order every data how we want in order to show it for the client in comfort way may make more functionality in this place
+    # for example make User-Instruction and more and more because this (data-place) that connect with the perform actually display our -> (interface) and the 
+    # perform oop function the back-end that connect with all the thing that did with the turn function (blockSystem) on . So we can say that the interface can do tow
+    # majotity things : one is the function that let the user see in every data that he get and tow is functions that dsign and actually decide about how it can will happen
+    # and how the user will see it according the commened (by the way in every interface this is the approximately stuation that come happen) for example to the situation 
+    # in linux terminal (bush) ->sudo up update <- actually turn on the function that in the design case and after it turn the back end function on and after to design function.
+    #that mean we have tow design function one is the function that translate the commend and simply do the functions and call to the back-end and the function that actually 
+    #design the data about the screan she get the massege from the back-end functions and both not really need argument on the function they just turn on the method that do what
+    #we want and . that mean for example in our Blockfunction we insert block with thing and mark and every thing that requered we will do the form and the design the block and
+    #bring masseges and more after we will do every thing in the client-face in perform function and for every input from user we need ->"interFace function".
+    
+    #In the "perform-function" we also will develop shortly system that will short proccess for the user when he want to do something and that come in tow different way 
+    #one is basically every function that short and do thing more times with function that insert different argument to the next copied and and will do it may in differen way 
+    #and the second is the function that do some similar also with the arguments in spacial place according the choises but it care about keeping function in the system of 
+    #our the ->"blockFunction" and the dictionary and modules in the system if the "coding-langauge" and this type of function can create the thing how we mark with this 
+    #dictionary and the modules for example of this function is can be something like this we use in python and create blockFunction and want to create flask-server in the block
+    #that we create in the function with the function shortly tow according what we said that can work like this : 
+
+    #let's beginning from every part of this proccess and how every part of this in shortly way will come happen . 
+    # So let's beginning from the "import-part" so if we use in second function that responsible on perform function and proccess that base on dectionary and modules from our
+    # blockFunction and on the dictionaries/modules from the langauge and type of code that we used , we first when we see the mark of import in the mark that come 
+    #for do this process and turn the function that i said and that will be something like that 
+    # ((--import (requered one space at least) Flask,,(Tow (,) between differen doing 
+    # ) modules Flask,main,rander_tamplate ,, (the three doing is what we wnat actually to do) "varification" ,, argument number 123456 email zdaci123@gmail.com ,,
+    # submit lestening,, rout-url Banda_varification ,, massege randomSixNumber --))
+
+    # in shortly that how part of flask-server will work for carification to the user that need it in generaly way and we will build actually block or form or somthing 
+    # that we can paste in simply way at the real-block accroding the constructions from the client like how we saw now . 
+    
+    #So now we will understand how the short function that care about short duplicate thing we don't want to cause the client to write the same function,activate a lot of time
+    #when this doings is similar So our deliberately is actually create function that contain and use in more function that connect to this situation , and duplicate things
+    #and doing that we do but in different way for example other argumnet in this copied activate or change the name of the input or some variable in for example of this 
+    #objective function -> "activate-duplecate-function" is may if we want to do the same loop but in every time we run the activate of the loop we will add one to the 
+    #result , (of course will more options of this situation and a lot of functionality for duplicate and more flexability that plan to come happen but in very genersly this
+    # the idea the main of this function) So if we care about the spesific situation that we said -> "we want to do the same
+    #loop but in every time we run the activate of the loop we will add one to the result" ((^duplicate|('idDublicate') 'requerments' |duplicate^)) and the close tap will be:
+    #((^closeDuplicate^))
+    # and for paste the duplicate
+    #((<duplicate| 'idDuplicate' |duplicate>)) <- with this we will 
+    #we plan to create (arguments) in the place that we copy to duplicate -> between "((^duplicate|('idDublicate') 'requerments' |duplicate^))" and ((^closeDuplicate^)) will be
+    #and we will delete the argument in the result of the block but that argument will allow us to insert our aguments do "copied" and that with function mark and more will 
+    #build this system of duplicate . So in our situation we will do some thing like that in order to make it :
+    #((^duplicate|('resultVariable')| duplicate=1 optional(function1(idargument)) |duplicate^)) ordinaryList=[1,2,3,4] enlargeList=[] for number(~ORD argument idDuplicate
+    #  argumentsId~)
+    #<- the argument that we put will delete and for the duplicate and we in this way put "ordinary" argument that temporary(זמני) for the duplicate about the element or 
+    # something else that (after) the argument 
+    #(continue the task) in ordinaryList : number+=1 enlargeList.append(number) (end) print(enlarge) 
+    #in the "pasteDuplicate" we will change the argument (just change the functions on the same duplicate marks that may need to come happen should be in the requerments in 
+    #duplicate place -> ((^duplicate|('idDublicate') 'requerments' |duplicate^)) the amount of time to duplicate will detemine in the copy or in the requerments also for 
+    #default behavior . (continue to the task) ((^closeDuplicate^)) the copy to some kind of place in the currently block or other will be 
+    #((<duplicate| 'idDuplicate' (argument number+1)|duplicate>)) every time we use in number element it will rise in one i.e in this case we will get instead of 
+    # enlargeList=[2,3,4,5] something like this enlargeList=[3,4,5,6] . 
+    
+    #The subFunction -> the premium function , is actually the function that in the function that consider defualt funtion for recognize like the shortly function (duplicate/
+    #dictionaryModules funtion) or the copy/paste function with default mini-block according what we said , and these subFunction can get happen in them and the delibaretely 
+    #behind it is to cause the function that consider default i.e ordinary and can perform direct in the block and in create more marks or place that consider argument
+    # that will get into to the subFunction and we will perform the subFunction according these arguments that mean for example when we create shortly function for dictionary/
+    #modules and we create import for Flask and after in the place that we write more marks that and use in the module that connect with so these mark of module will perform
+    #according the subFunction and what he get from main-function more example about this can be when we copy some kind of mini-block after we change him and insert things...
+    #so we decide to "turn-on" some functions in the paste request : <--{(blockName,idMiniBlock),(function1(argument1='123'))}--> So what that mean we ask for use in function1 ?
+    #that mean actually this -> (search for argument1 and when you see it paste 123 in this situation and perform the function with this argument (123) and in default condition)
+    #paste the result/s in the same place . Of course every "direct" function have subFunction that they can use on but the rules is keeping and every subFunction+function
+    #depend on arguments that we insert .
