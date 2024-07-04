@@ -1,146 +1,168 @@
-import re
-exampleWorkingDataStatic=[[[['default-data1','default-data2-sepesificThings'],['default-data in other sepesificThings']],['default-data in other dataName']...,...]...] 
+import re  # Import the regular expression module
 
-def createStaticsAndBlocks(data=[[[['data']]],[['dataBlock']]],patternDefaultDatas=
-    {'patternData':{"property":{"dataName":{'sepesificThings':[]}}},'patternDefaultBlock':{'property':{'blockName':[]}}}):
-    for patternDefaultData,subData in zip(patternDefaultDatas,data):
-        for property,propertyList in zip(patternDefaultData,subData):
-            for dataNames,dataNamesList in zip(property,propertyList):
-                if patternDefaultData=='patternDefaultBlock':
+# Example working data
+exampleWorkingDataStatic = [
+    [
+        [
+            ['default-data1', 'default-data2-specificThings'],
+            ['default-data in other specificThings']
+        ],
+        ['default-data in other dataName']
+    ]
+    # ... other data ...
+]
+
+# Function to create statics and blocks
+def createStaticsAndBlocks(data=[[['data']], [['dataBlock']]], patternDefaultDatas={
+    'patternData': {"property": {"dataName": {'specificThings': []}}},
+    'patternDefaultBlock': {'property': {'blockName': []}}
+}):
+    # Iterate over patternDefaultDatas and data
+    for patternDefaultData, subData in zip(patternDefaultDatas, data):
+        # Iterate over properties and their lists
+        for property, propertyList in zip(patternDefaultData, subData):
+            # Iterate over data names and their lists
+            for dataNames, dataNamesList in zip(property, propertyList):
+                # If the pattern is for a block
+                if patternDefaultData == 'patternDefaultBlock':
+                    # Initialize the list if it doesn't exist
                     if not patternDefaultDatas[patternDefaultData][property][dataNames]:
-                        patternDefaultDatas[patternDefaultData][property][dataNames]=[]
+                        patternDefaultDatas[patternDefaultData][property][dataNames] = []
+                    # Append the data name list to the property
                     patternDefaultDatas[patternDefaultData][property][dataNames].append(dataNamesList)
                     break
-                else:  
-                  for sepesificThings,sepesificThingsList in zip(dataNames,dataNamesList):
-                      if not patternDefaultDatas[patternDefaultData][property][dataNames][sepesificThings]:
-                          patternDefaultDatas[patternDefaultData][property][dataNames][sepesificThings]=[]
-                      patternDefaultDatas[patternDefaultData][property][dataNames][sepesificThings].append(sepesificThingsList)
-    patternDefaultDatasFilled=patternDefaultDatas
-    return patternDefaultDatasFilled
+                else:
+                    # Iterate over specific things and their lists
+                    for specificThings, specificThingsList in zip(dataNames, dataNamesList):
+                        # Initialize the list if it doesn't exist
+                        if not patternDefaultDatas[patternDefaultData][property][dataNames][specificThings]:
+                            patternDefaultDatas[patternDefaultData][property][dataNames][specificThings] = []
+                        # Append the specific things list to the data name
+                        patternDefaultDatas[patternDefaultData][property][dataNames][specificThings].append(specificThingsList)
+    return patternDefaultDatas
+
+# Function to create a form
 def createForm(patternDefaultDatasFilled):
-    form={'status':{},'response':{'error':{'request':{},'runing':{}}},'requests':{'precisely':{}},'name':{}
-    additionaForm={'error':['request','runing'],'requests':['name',{'mark':['block','text']},
-    {'details':[{'block':[{'dinamic-name':['argument','tag']}]}]}]},
-    {'internal-request':['private-request-details'],}
-    def additionFormFunction(form,additionaForm):
-        for typeOf,subDatas in additionaForm.items():
-            if not form[typeOf] in form:
-                  form[typeOf]={}
-        def insertInteranlData(subDatas,current_data=form[typeOf]):
-            if isinstance(subDatas,list):
-              for subData in subDatas:
-                 if not(isinstance(subData,dict)):
-                    if not current_data[subData] in current_data:
-                     current_data[subDatas]={}
-                     #The aim behind it is to add the subDatas that we want to the form and after equel to empty {} , in order to add sub data every time like {blockName:[]}
-                     #the rules here , when we put sub data in ([]) this is the sub number level tow of dinamic and in it we insert when we want the sub most dinamic data 
-                     #and isert which data we want in [] . this idea will be look like this in the form (type of data in our system) 'error':{'request':{blockName:[]}}
-                 else:
-                     for key,value in zip(subData):
-                        if isinstance(value,list):
-                            if not key in current_data:
-                              current_data[key]={}
-                            insertInteranlData(current_data[key],subData)
+    # Initialize the form structure
+    form = {
+        'status': {},
+        'response': {'error': {'request': {}, 'running': {}}},
+        'requests': {'precisely': {}},
+        'name': {}
+    }
+    
+    # Additional form structure to be added
+    additionaForm = {
+        'error': ['request', 'running'],
+        'requests': [
+            'name', 
+            {'mark': ['block', 'text']},
+            {'details': [{'block': [{'dynamic-name': ['argument', 'tag']}]}]}
+        ],
+        'internal-request': ['private-request-details']
+    }
+
+    # Function to add additional form structure
+    def additionFormFunction(form, additionaForm):
+        # Iterate over types and their sub-data
+        for typeOf, subDatas in additionaForm.items():
+            if typeOf not in form:
+                form[typeOf] = {}
+            def insertInternalData(subDatas, current_data=form[typeOf]):
+                # If sub-data is a list
+                if isinstance(subDatas, list):
+                    for subData in subDatas:
+                        if not isinstance(subData, dict):
+                            # Initialize sub-data if it doesn't exist
+                            if subData not in current_data:
+                                current_data[subData] = {}
                         else:
-                          print('Insert new type of data in your form failed due to : incorrect placement.')
-                             
-            else:
-              print('Insert new type of data in your form failed due to : incorrect placement.')
-        insertInteranlData(subDatas)
-    additionFormFunction(form,additionaForm)
-    additionaForm={'error':['request','runing'],'requests':['name',{'mark':['block','text']},
-    {'details':[{'block':[{'dinamic-name':['argument','tag']}]}]}]},
-    {'internal-request':['private-request-details'],}
-    def additionFormFunction(form,additionaForm):
-        for typeOf,subDatas in additionaForm.items():
-            if not form[typeOf] in form:
-                  form[typeOf]={}
-        def insertInteranlData(subDatas,current_data=form[typeOf]):
-            if isinstance(subDatas,list):
-              for subData in subDatas:
-                 if not(isinstance(subData,dict)):
-                    if not current_data[subData] in current_data:
-                     current_data[subDatas]={}
-                     #The aim behind it is to add the subDatas that we want to the form and after equel to empty {} , in order to add sub data every time like {blockName:[]}
-                     #the rules here , when we put sub data in ([]) this is the sub number level tow of dinamic and in it we insert when we want the sub most dinamic data 
-                     #and isert which data we want in [] . this idea will be look like this in the form (type of data in our system) 'error':{'request':{blockName:[]}}
-                 else:
-                     for key,value in zip(subData):
-                        if isinstance(value,list):
-                            if not key in current_data:
-                              current_data[key]={}
-                            insertInteranlData(current_data[key],subData)
-                        else:
-                          print('Insert new type of data in your form failed due to : incorrect placement.')
-                             
-            else:
-              print('Insert new type of data in your form failed due to : incorrect placement.')
-        insertInteranlData(subDatas)
-    additionFormFunction(form,additionaForm)
-    dictNamesIssue={}
-    def addFormFundamental(form,DataNames):
-        dictNames={}
-        for issueNames,listNames in DataNames.items():
-            for listName in zip(issueNames,listNames):
-                dictNames[listName]={}
-            dictNamesIssue[issueNames]=dictNames
-            dictNames={}
+                            # Iterate over keys and values of the dictionary
+                            for key, value in subData.items():
+                                if isinstance(value, list):
+                                    if key not in current_data:
+                                        current_data[key] = {}
+                                    # Recursive call to handle nested lists
+                                    insertInternalData(value, current_data[key])
+                                else:
+                                    print('Incorrect placement: insert new type of data in your form failed.')
+                else:
+                    print('Incorrect placement: insert new type of data in your form failed.')
+            insertInternalData(subDatas)
+    additionFormFunction(form, additionaForm)
+
+    dictNamesIssue = {}
+
+    # Function to add fundamental structure to the form
+    def addFormFundamental(form, DataNames):
+        dictNames = {}
+        for issueNames, listNames in DataNames.items():
+            for listName in listNames:
+                dictNames[listName] = {}
+            dictNamesIssue[issueNames] = dictNames
+            dictNames = {}
+
         def insertIdDataForm(form):
             for category in form:
-                if isinstance(category,dict):
-                  if category=={}:
-                      for dictNameIssue,content in dictNamesIssue.items():
-                          category[dictNameIssue]=content
-                  else:
-                      insertIdDataForm(category)
+                if isinstance(category, dict):
+                    if category == {}:
+                        for dictNameIssue, content in dictNamesIssue.items():
+                            category[dictNameIssue] = content
+                    else:
+                        insertIdDataForm(category)
                 else:
-                    print('Failed to insert the fundamental data , your form incorrect')
+                    print('Failed to insert the fundamental data: your form is incorrect')
         insertIdDataForm(form)
-    addFormFundamental(form,patternDefaultDatasFilled['patternData']['names'])
-    for codeType in zip(patternDefaultDatasFilled['patternData']['requestsListGenerally'].key(),patternDefaultDatasFilled['code'].key()):
-      for (markType,generalyPatternlist),code in zip(patternDefaultDatasFilled['patternData']['requestsListGenerally'][codeType].items(),patternDefaultDatasFilled['code'][codeType]):
-          #So basically the one argument zip is consistunet-list that contain in every list ,every passible generaly pattern for for this spesific mark in block
-          # and the the second argument is actually the all the "real-block" that we wrote in one list 
-          exampleIdBlockPattern=re.compile(r'[A-Z]{1}/d+')
-          for idCodePattern in patternDefaultDatasFilled['patternData']['idCode'][codeType]:
-            requestSpesificType=[]
-            for generalyPattern in generalyPatternlist:
-                if re.findall(generalyPattern,code):
-                  requestSpesificType.append(re.findall(generalyPattern,code))
-            idCode=re.match(idCodePattern,code[1:])
-            if idCode:
-              if idCode.group() in patternDefaultDatasFilled['patternDefaultBlock']['blockNames']:
-                if not form['requests']['mark'][markType][codeType][idCode.group()]: 
-                  form['requests']['mark'][markType][codeType][idCode.group()]=[]
-                form['requests']['mark'][markType][codeType][idCode.group()].append(requestSpesificType)
-                requestSpesificType=[]  
-              else:
-                  form['response']['error']['request'].append(f"The requestMarks : {requestSpesificType} failed because the name block doesn't found in your store block")
-            else:   
-                form['response']['error']['request'].append(f"The requestMarks : {requestSpesificType} failed because the name block doesn't found in the spesific block")
-        
-          for idCode,requestMarklist in form['requests']['mark'][markType][codeType].items():
-              preciselyPatternList=[]
-              for requestMark in requestMarklist:
-                  for markType,presicelymarkPattern in patternDefaultDatasFilled['patternData']['preciselyPattern'][codeType]:
-                      for presicelyStagePattern in presicelymarkPattern:
-                          partNumber=True
-                          combinedPattern=''                                                    
-                          for presicelyPattern in presicelyStagePattern:                                                    
-                              pattern=re.compile(presicelyPattern)                                                    
-                              if partNumber==True:                                                    
-                                  match=re.match(pattern,requestMark)                                                    
-                                  partNumber=False                                                    
-                              else:                                                    
-                                match=re.search(pattern,requestMark)                                                    
-                              if match:                                                    
-                                  combinedPattern+=presicelyPattern                                           
-                                  break                                                    
-                              elif presicelyPattern==presicelymarkPattern[-1]:                                                    
-                                  form['response']['error']                        
-                                                       
-                          preciselyPatternList.append(combinedPattern) 
-                      form['requests']['mark'][markType][codeType][idCode]=preciselyPatternList
-              preciselyPatternList=[]                                                                         
-    form['requests']['presicely-pattern']=preciselyPatternList
+
+    addFormFundamental(form, patternDefaultDatasFilled['patternData']['names'])
+
+    # Iterate over code types and their general patterns
+    for codeType in zip(patternDefaultDatasFilled['patternData']['requestsListGenerally'].keys(), patternDefaultDatasFilled['code'].keys()):
+        for (markType, generallyPatternlist), code in zip(patternDefaultDatasFilled['patternData']['requestsListGenerally'][codeType].items(), patternDefaultDatasFilled['code'][codeType]):
+            exampleIdBlockPattern = re.compile(r'[A-Z]{1}/d+')
+            # Iterate over id code patterns
+            for idCodePattern in patternDefaultDatasFilled['patternData']['idCode'][codeType]:
+                requestSpecificType = []
+                # Match general patterns in the code
+                for generallyPattern in generallyPatternlist:
+                    if re.findall(generallyPattern, code):
+                        requestSpecificType.append(re.findall(generallyPattern, code))
+                # Match id code pattern
+                idCode = re.match(idCodePattern, code[1:])
+                if idCode:
+                    if idCode.group() in patternDefaultDatasFilled['patternDefaultBlock']['blockNames']:
+                        if not form['requests']['mark'][markType][codeType][idCode.group()]:
+                            form['requests']['mark'][markType][codeType][idCode.group()] = []
+                        # Append the specific request type
+                        form['requests']['mark'][markType][codeType][idCode.group()].append(requestSpecificType)
+                        requestSpecificType = []
+                    else:
+                        form['response']['error']['request'].append(f"The requestMarks: {requestSpecificType} failed because the block name wasn't found in your store block")
+                else:
+                    form['response']['error']['request'].append(f"The requestMarks: {requestSpecificType} failed because the specific block name wasn't found")
+
+            for idCode, requestMarklist in form['requests']['mark'][markType][codeType].items():
+                preciselyPatternList = []
+                for requestMark in requestMarklist:
+                    for markType, preciselyMarkPattern in patternDefaultDatasFilled['patternData']['preciselyPattern'][codeType]:
+                        for preciselyStagePattern in preciselyMarkPattern:
+                            partNumber = True
+                            combinedPattern = ''
+                            for preciselyPattern in preciselyStagePattern:
+                                pattern = re.compile(preciselyPattern)
+                                if partNumber:
+                                    match = re.match(pattern, requestMark)
+                                    partNumber = False
+                                else:
+                                    match = re.search(pattern, requestMark)
+                                if match:
+                                    combinedPattern += preciselyPattern
+                                    break
+                                elif preciselyPattern == preciselyMarkPattern[-1]:
+                                    form['response']['error']['request'].append(f"Precisely pattern: {preciselyPattern} failed")
+                            preciselyPatternList.append(combinedPattern)
+                        form['requests']['mark'][markType][codeType][idCode] = preciselyPatternList
+                preciselyPatternList = []
+
+    form['requests']['precisely-pattern'] = preciselyPatternList
+
