@@ -1,0 +1,467 @@
+#So we actually can delete the duplicate function/mark and just insert the new fiture in the copy/paste mark because the duplicate actually can copy and paste several time 
+#same thing but with dinamic argument and different functions that take different argument for example function1 can take all the part-block that we insert to the paste in order
+#to discover more marks that consider internal mark in the copy (and in generly we actually called to mark and function that site on the mark that we catch internal marks and 
+#functions )<- and that actually say that the default-mark that we read directly in the block and keep and check what we need in several beginning functions and keep in the 
+#form how we need according the indtruction of the default-mark and after in the oop classes perform we actually analyze everything and perform what we need . So we actually do
+#everything that consider spacial according the request in the interanl-function and internal-mark the default mark do actually very simple things such as copy and paste 
+#short things... but the internal thing like the spacial arguments and the function that take the spacial argument that consider argument or argument that consider argument 
+#because we put the function that read the charecter/s like arguments.
+
+
+#that can say about the way that we go on we actually we recognize the "big-mark" the default mark and check
+#it and keep in the form in spesific place and in the spesific way that mean actually we have condition category that we can put the mark and save different part of and after 
+#we can perform all the things and first the instruction of the default mark and after the function argument and more according the request and the instruction and just insert
+#the wanted things in the block or the part of the block that we catch or in the place that we modify and send as massege .
+
+#after we know the process of every modify in the system and approximately how the client get it we understand that we need to put as well as the argument we want to modify
+# in the place that we paste the catching-block or something like this we need to say which condition we will turn on this functionality about the block or add or do 
+# some kind of modify on the argument according the condition like argumentId?(+=)!(+1) or argumentId?(function1) . So in this way we actually say before all the activates 
+#about the argument that we want to do we can simply say the situation that we want to do this process about the spesific argument . 
+#The math in order to find the tiwch  of {} in block -> i need this math in order to understand more clear where i need to put the varible or to do this action on the varible/
+#object so we just need the index of the ({) and after the next (}) , but if in the same block found more ({) we need the next next (}) and etc... this code will be like this :
+
+# when we insert something in the block or in the catch(the place that we "catch" with the open and close tag with the default-mark)
+#with function according the value and condition or in other word every when we insert or modify argument we have several of mendedory that we must do in order to do it 
+# pefect and in the currently argument/s :
+
+# first we will use in the loop for in order to recognize the index of the { } that suit for together after we need to insert the argument or modify that we choise for 
+#dinamic and we put them not in the sub-function i.e don't belong to the catch but this argument can be in catch-place simply don't blong to this place and don't need to insert
+#or get modify with the default-mark that close about this place like (a) argument the default argument that insert in the beginnig
+#So in shortly i said about we have tow type of argument that blong to catch and the regolary argument 
+#and we will insert and modify the argument that ordinary in the beginning and the sub argument that blong to some kind of catch class in the same way 
+#we will check the condition of the argument and the type of the argument (let's assume that in ORD argument he need to be in the extend(איקף) of the block)
+# and active the instruction way , so if we need to be in the extend of the block we need i.e ORD argument we need every catch or place that we cheracter to create list of
+# indexs for tiwch of { and this } and every time insert or modify or do something but the issue is to know the change of the lengh argument and after do :
+# A(the number that we need to increase or decrease all the {} tiwch constitunet-list) = B(length_argument_rightNow_old) - C(length_argument_rightNow_old) 
+#and after change all the number in this constitunet-list of index ^^^^^^^^^^^^^ why we need actually to know the limit of the block ? because if we insert the 
+#argument and (most of the time that whene we will use in arguments we will do some insert or modify but in inserting way ) we need to suit the value to argument in the 
+#wanted block due to we need to know the index of the { and the suit close } before we take care about the next argument/s and every time the index get change because we insert
+#thing/s in different length .
+#the placement will something simple like this:
+
+#We need to turn-on this function just when we insert new value/data to the dinamic thing 
+#We need to do A=len(newValue)-len(oldValue) and we need to insert this number to every index <B> and with minus </B> 
+#We do it in order to make new range of rangeBlock:[rnage-number] (in line 262) and all get change 
+
+#So now how we can actually get the suit close and opening tag <B></B>. we need to catch the next close direct but if in the block until we arrive to </B> the close tag
+#we doesn't see more opening tag <B> if we we see we need to catch the next next of , and etc... every time . (and we will just need to get the index of both <B></B> in suit)
+#We will build list opening and closing and order the index from lowest to higher after we will create for rnage...in loop and check if the first for example of 
+#closing index to the first opening if not openingTagBefore , and that will be like this :
+# openingTagBefore
+# for openingTagBeforeOrgan in openingBlock: if : openingTagBeforeOrgan<opening[i]
+#openingTagBefore+=1 
+#But if it openingTagBefore we will increase the index of close tag that we will suit to opening i.e the suit closing tag will be blockTag={opening:[lowest to higher],
+#closing:[lowest to higher]} 
+import re
+scanResult={}
+patternForSearchTags={'typeCode':{'open':{'block':'<B>'},'close':{'block':'</B>'}}}
+#
+def createIndexPlaceTag(text,scanTgIndexResult,patternForSearchTags):
+  for typeCode in patternForSearchTags:
+    for tagStatus,tags in patternForSearchTags[typeCode].items():
+      for textIndex in range(len(text)): 
+        for tagType,tag in tags.items():
+          if text[textIndex]==tag[0]:
+            for tagTypeIndex in range(1,len(tag)):
+              if tag[tagTypeIndex]==text[textIndex+tagTypeIndex] and tagTypeIndex==len(tag)-1 and re.search(r'/\s||\n',text[textIndex+tagTypeIndex+1]):
+                scanTgIndexResult[tagStatus].append([textIndex,tagTypeIndex])
+              if scanTgIndexResult[tagTypeIndex]==text[textIndex+tagTypeIndex]:
+                continue
+              else:
+                break                                    
+def linesListsCodeIndexs(code):
+  textListLine=code.split('\n') 
+  indexesLine=[]                                    
+  linesListsTextInCode=[]                                    
+  for lineTextIndex in textListLine:                                    
+    for organIndex in range(len(textListLine[lineTextIndex])):                                    
+      indexesLine.append(organIndex)                                    
+    linesListsTextInCode.append(indexesLine)                                    
+    indexesLine=[]  
+  return linesListsTextInCode
+def createIndexPlaceTag(code,patternForSearchTags,scanResult):                                    
+  linesIndexListsCode=linesListsCodeIndexs(code) 
+  dictionaryCodeLine={}
+  for lineCodeIndex in range(len(linesIndexListsCode)):
+    dictionaryCodeLine[f'{lineCodeIndex}']=0                            
+  for typeCode in patternForSearchTags:                                    
+    for tagStatus,tags in patternForSearchTags[typeCode].items():                                    
+      for textIndex in range(len(text)):                                     
+        for tagType,tag in tags.items():                                    
+          if text[textIndex]==tag[0]:                                    
+            for tagIndex in range(1,len(tag)):                                    
+              if tag[tagIndex]==text[textIndex+tagIndex]:
+                if tagIndex==len(tag)-1:
+                   for indexesLineIndex in range(len(linesIndexListsCode)):
+                     if [textIndex,textIndex+tagIndex] in linesIndexListsCode[indexesLineIndex]:
+                        line=text[linesIndexListsCode[indexesLineIndex]]
+                        dictionaryCodeLine[indexesLineIndex]+=1 
+                   catchingsIndexStartAndCatchingIndexEnd=searchIndexRangeAccordingNames(line,[tag]) #Return the area with range index according the names ->[[start1,end1],[start2,end2]] 
+                   tagIndexStart=catchingsIndexStartAndCatchingIndexEnd[dictionaryCodeLine[indexesLineIndex]][0]
+                   tagIndexEnd=catchingsIndexStartAndCatchingIndexEnd[dictionaryCodeLine[indexesLineIndex]][1]
+                   if possibleAfterAndEndInText(line,{'before':['every-possible-thing/s-can-be-after-tag-before'],'after':['every-possible-thing/s-can-be-after-tag-after']},
+                                                tag,tagIndexStart,tagIndexEnd,details):
+                     if not scanResult[typeCode][tagStatus]:
+                       if not scanResult[typeCode]:
+                         scanResult[typeCode]={}
+                       scanResult[typeCode][tagStatus][tagType]={}
+                       scanResult[typeCode][tagStatus][tagType]['start']=[]
+                       scanResult[typeCode][tagStatus][tagType]['end']=[]
+                     scanResult[typeCode][tagStatus][tagType]['start'].appned(textIndex)
+                     scanResult[typeCode][tagStatus][tagType]['end'].appned(textIndex+tagIndex)
+def possibleAfterAndEndInText(text,possibles,wanted,details):
+  lineNotSpace=text.replace(' ','')
+  for when,possible in possibles:
+    if when=='before':
+    if when=='after':
+    #We will check more things according according sub thing that we will put.
+def chageName(code,catchNamesLists):
+  if isinstance(catchNamesLists,list):
+    if code==f'{code}':
+      for catchNames in catchNamesLists:
+        if isinstance(catchNames,list) and len(catchNames)==2:
+          for indexCode in range(len(code)):
+            if code[indexCode]==catchNames[0]:
+              for indexCharName in range(1,len(catchNames[0])):
+                if catchNames[0][indexCharName]==code[indexCode+indexCharName]:
+                  if indexCharName==len(catchNames[0]):
+                    #if wantedConditionInInviromentOf(code[indexCode+indexCharName],condition)
+                    for deleteIndexCode in range(indexCode,indexCode+indexCharName):
+                      del code[deleteIndexCode]
+                    start=code[indexCode:]
+                    end=code[:indexCode]
+                    code=start+catchNames[1]+end
+        else:
+          print("Catch error !")
+    else:
+      print("Code error !")
+  else:
+    print("Catch error !")
+    
+scanTagIndexResultOrderExample={'open':{'block':{'start':[1,2],'end':[3,5]}},'close':{'block':{'start':[100,1001],'end':[101,1002]}}}
+scanTgIndexResultOrder={{{}},{{}}}
+pairsBlockTag=[]
+def orderPairsTag(scanTgIndexResultNotOrder,text):
+  for typeOfTag,pairs in range(len(scanTgIndexResultNotOrder.items())):
+    for pair in pairs:
+      tag=searchInText(pair,text)
+    #This function take [start,end] and bring the part of text in this range (that what we need after we check and pick every close and open tag at the text when we 
+    #pull out this apesific part from the text we can analyze it for example the name in order to create something like -> scanTgIndexResultOrderExample) 
+      for tagName,mark in 
+
+    howMuchOpeningTag=0
+    for closeTagBlockIndex in scanTgIndexResultNotOrder.open[tagBlockIndex:]:
+      if scanTgIndexResultNotOrder.close[tagBlockIndex]>closeTagBlockIndex:
+        howMuchOpeningTag+=1
+    pairsBlockTag.append([tags.open[tagBlockIndex],scanTgIndexResultNotOrder.close[tagBlockIndex+howMuchOpeningTag]])
+#My porpuse on this case recognize tags and in thex and order them i need say when it the end or the start of the range and name of every pair of tags that i wanna to 
+#create according to regular expression .
+
+#Now we need to create blockTag dictionary .
+"""
+  for twich in institunetTwichListOld:
+      for index in twich :
+          
+        index+=A(The bonus number can be +/- netural)
+        institunetTwichListNew.append(index)
+    institunetTwichListNewOld.append(institunetTwichListNew) 
+    institunetTwichListNew=[]
+institunetTwichListOld=institunetTwichListNew
+"""
+#^^^^^^^^that how to create change and increase or decrease the <B></B> in suit according what we add (above)
+
+
+
+#And the area for this value or for this doing on the argument will be something like this (below)
+for index in dictionaryPair.open:
+  space=argumentIndex-dictionaryPair
+  list.append(space)
+find_positive_number(list):
+  positiveList=[num for num in list if num > 0]
+  if list:
+    return positiveList
+positiveList=find_positive_number(list)
+minPositiveSpace=min(positiveList)
+minPositiveSpaceIndex=dictionaryPair.open.index(minPositiveSpace)
+areaArgument=[dictionaryPair.open[minPositiveSpaceIndex],dictionaryPair.close[minPositiveSpaceIndex]]
+#this the is the area for the variable that we take as argument in the block .
+"""
+#The new idea about the system of the blockFunction that will bring more easier for the client and for the us (programers) :
+#we will append to the data-block place for (marks) and instructions with spacial id for everyone of them .
+#And in this way we actually can short the requests , instead of to write for example on some kind of catch place in the block instructions and spacial thing we actually 
+#write it in spacial place in data-block and just say we want to use in this instructions according the id .
+#For example of this situation that we can use in this fiture : <--(idCopyFunction){block}-->  idCopyFunction(fucntion1(argument1) function2(argument2))
+#We will insert the argument/sub-function in different way in this case every time basically we will build handler in the instruction about the thing that we will bind to 
+#the catch with id for example if we want to take care about argument in or other type of sub-function we will build may condition that ask for example if the argument
+#equal to something and if yes we will insert the argument with the function1 or something like this , the porpuse is to put the wnated value or the wanted thing in the 
+#exactly place according what exist before after what it equal and more mark that we decide according them, and response with our instructions .
+
+#In this way everything will be very easy because we will response with the instruction and fit it to id , that true exist default thing that get perform and behave first in 
+#one way , but we can combine this defualt behavior in some thing and our behavior with instruction and also with argument or some kind of sub-function 
+#So this system will build like this : we will put several mark and we know that they have type of behavior that come on in default such as "copy" function at the other place
+#we connect with id spacial instruction also behavior for ->(argument or sub-function , but also they have default behavior such as connect to the copy catch with our 
+#id for it) the behavior that we put in the "argument or sub-function" is just based on the nameOf mark id... and we just search it in the catch , of course not everyone have
+#"catch" place like : copy-function , So if nothing we just need to put this sub-function argument and bind it to the thing that we want with id , and after it we simply will
+#search it in the catch of spesific thing , let's understand this topic with example :
+# -->{(blockName(optional),idPasteFunction),function1(argument1='123
+# (So now in this way we just can put in this function that in the currently mark as argument or simply insert the ending value to the argument with name 
+# argument1 or if nothing argument in this function it take all the block copy or the catch and perform the function about it 
+# in shortly we actually see that prefer to use in the instruction at the block-data to say what we exactly wnat and how)'))}<--
+#So in this case if we want modify and perform things on the copy catching idPasteFunction(idargument?('Elior')!(function1(idargument),
+# idargument?([3]->+=1)!(modify spesificArgument\numberCatch("the number or condition and the")[0][condition[0].index(1)] put 2))) 
+#^^^^^^^^^^^^^^^^ In this case we saw actually how we create spesific condition for argument according id first after we put the wnated things according index and the condition
+#that should anough flexabilty in this case(placement argument and sub-function according the conditions) .
+#several fixes in this case that can get more relevant:
+#We actually can aim to spesific place like (condition[0]) , so we can take this idea and create more flexability we can create "pain" and give the id and after we check 
+#condition or something like this for argument or some thing we will can aim and change the "pain" and even aim exactly where we want to bring change in the relation or the 
+#pain thing 
+#that idea bring more flexability to the system because instead of aim where we want to change the thing according the nuber of condition that in the qestion or more over 
+#we can for example change the argument or the guy that we want to "modify" and say we want this and this to modify because it uphold the condition (and) exist "pain" about this
+# thing and more and more situation that we can simply do in really simple mark . 
+#the condintion of the argument can be something like this :
+
+
+
+#(argument.tag.id="tagId")
+#1: (argument.id="argumentId")?([0]->+=^This before^1^This after^)~([1]<-1^tow^2^towAfter^)!(modify before in condition[0] "^This after^" after "^This before^" catch 1 equel 2
+#,modify after ^tow^ before ^towAfter^ condition[1][condition[1].index(2)]=3,...)
+
+#We need to follow about the variable/object/element and the place that for and decide if check and perform or not . 
+#Despite we actually can't put any of the sub-function in the condition, because if we actually want want to put id of any sub-function and care about it we can simply create a
+#new statment of conditions and performs . So instead in order to make flexability in our system and check condition in more dinamic way we can use in our attribute that we created
+#the (^) with it we will can mark place for condition to start check from i.e we will create mark and from there we will start to search the spesific thing as well as we will
+# add id/class... other things that we can catch and change and what ever like this for the same condition/s and afer in the preformer this will allow to catch what we want
+
+# for example to the 2new ask : (argument.id="Aid",tag.id="tagId")?(argument itself(automaticaly)[80-120]<-"^Elior^"[1]<-+=1)!(modify in condition[0] [argument[0]+argument[1]]=123\all=123)
+#let's break this down : we actually say in this case that we want to modify or something else to do in the !(...) , after we actually "range" from the catching thing 
+#like this argument.id="Aid",tag.id="tagId" and put type of "if" exist in this range and behind the catching thing because (<-) and after we say the same thing on the 
+#  "^Elior^"" if we found it in the range we will search behind one "-+=1" and if everything happned we change (all) the argument or sub-function that we catch to 123
+# and in the deliberately we aim to condition 1 and use in (modify) method . 
+
+#example 2:
+#(argument.id=1,tag.id=2)?([5-20]->^simpleMark^[0]<-"Elior the king")~([0]->"Banda")~("Elior")!(condition[0]  after '^' before '^' catch all(optionaly) equel 4)  
+                                                                    #^ "and" for our system^^ the argument or wanted thing it self is eqeul to "Elior"
+   #What is going on with ^something^ : that actually our way to say "this the guy i want to modify/something else and the beautiful thing in this solution is ->(in our system
+   # that read the block and etc... we delete the ^^ and everything that in , so we can use this "mark" in order to mark the spesific thing and after we modify the argument
+   # or somthing else or do everything elese we delete it and that isn't disturbing )" and this how we "catch" the 1 from exact place.
+   
+   #the explantion  for example one is : in the beginning " (argument.id="argumentId")" we say that we want to see in this case at the block the argument with this spesific
+   #id , after we create to condition by the way because of this we put in the activate place this !(...) condition[0] and condition[1] in the condition one we write
+   #([0]->+=^This before^1^This after^) let's break down ([0]) that mean "we want to check the something direct after or behind the argument with this id " the (->) mean 
+   #"I want to search it after this argument" and after is just the describe about what we actually want after "+=^This before^1^This after^" the "and" condition (by the way 
+   # "~" say "and" in our system) "([1]<-1^tow^2^towAfter^)" ([1]) say we beginning to check the wanted thing not dirctly like the previous condition , one more char in order
+   #and the (<-) say behind , 1^tow^23^towAfter^ say simply what we wnat in the condition (for clearly this the condition 12 simply the things with ^ for say the system 
+   #we want something between both and contrast between more 23 if was in the same condition)
+   #so after we just say what we want with really simple instructions (after the ! mark of course) : (modify before "^This after^" after "^This before^" catch 1 equel 2
+   #,modify condition[1] after ^tow^ before ^towAfter^ catch 2 equel 3,...) 
+   
+   #We will build actually system for language in "blockFunction" but we don't build this system for spesific thing or some kind of doing because we will suit this system
+   #to put mark and several condition and we order it and search what we need according texts and conditions and every filled that this function/s need but this will 
+   work actually in "global" i.e work for every functionality that need to search suit perform according to condtion that done 
+
+   #Actually we say here that we will read the question to the system function of block function not just for dinamic argument or things like this , for every funcionality
+   #that we to do and to check things in the enviroment of the thing and perform some kind of thing due to and in every function that we want to perform and check 
+   #the enviroment of these things we need to insert the (question,text) in the function that we use we will order the "quesion" according the argument that user insert 
+   
+   #what we have a problem because that's really deficult to undertand how we actually need to build the "query" from argument -> function(argument1,...) because of this 
+   # we must build pattern for our system and after we analyze the pattern that inserted and from it pull out the wanted query for "function-language" 
+   # something like this function(argument1,pattern...): query=queryPattern(pattern), newTextOrLicenseForSomeThing=function_language(query)
+   # 
+   # The defination of this language right now is to check/chage thing in the "text" according several different marks that we want and that query actually can build in
+   #the function that want to use in this function 
+
+   #Why we actually need to insert in some kind of function "pattern" and after compile the pattern to query and we don't simply tight the pattern as query because 
+   #the real query like this ->
+   # (argument.id=1,tag.id=2)?([5-20]->^simpleMark^[0]<-"Elior the king")~([0]->"Banda")~("Elior")!(condition[0]  after '^' before '^' catch all(optionaly) equel 4)  
+   #need have a lot of details and defination for things... but in the pattern we can insert thing as mark for example 'range-index=[1,3] and after[1]->[possible-thing]'
+   #And we will create query with "or" on every possible thing that allow to happen , we see that this "pattern" actually can build long query in very easy way and we must to use
+   #in all the laguage every time in order to perform all the functionality that we allow . 
+
+#In order to understand how to follow on "element" in order to understand where the tange of him or something like this we need to figre out actually how we can follow
+#on any variable/object :
+#So in the block the user can create variable/object when he eqeul something, (variable) (=) (value) . So the variable can get change in several way , but the (id) of him
+#didn't get change i.e the details that we create about the variable/object -> (~id,...~) . Basically we create a variable and bring value so we need to follow about the 
+# variable and object and update the value everytime that we exactly need the challenge in this case is , actually undestand the range of every variable but the majority 
+# is to understand when we change the variable/object for really or the local variable/obgect . In our case we just need to undestand what is the range and check him for
+# every time we see the same name of variable the range of the block that he contain in if nothing and the range is true we can change in our details the value if have 
+# we need to check if have any instance in this range of the "mini" block that we in (global variableName) or if we speak on function in function (nonlocal variableName).
+
+#So for this we need to create function that can find the range of index of something that we search we can actually do it with (loop for rand) and we will pull out every
+#time one char or index from the "block" and check if this suit to first index of wanted things for example the wanted things can be somethings like this:
+# A=["global variableName1","global variableName2","global variableName3","nonlocal variableName1","nonlocal variableName2"]<- this can be for example the wanted things in order
+# to follow about the variable or object that we created or something like this . And the block or the part of block that we put in order to follow on the variable/object or 
+# or (simply str that we put in order to search suit things to the "wnated" things the A list for example and as well as to get "rangeIndex" of the wanted things in the str
+#i.e where wanted things in exact place)<- we do this function in order to find any wnated things according what we said but in majority for decide what we need to do with the 
+#variable\object that we put about him "details"->(ut local variable\object , or notice what is the actually aim of . In shortly that are the intents of function .  
+#str=[""]~id...~) if we need to change or not because sometime the variable not in the range of the block or this just the same name 
+# but the intent(הכוונה) is actually change or p
+import re
+licenses_example_toChangeDetailsInSpesificBlock={'argument':{'licenseA1':"(~details1~)",'licenseA2':"(~details1~)",'licenseA3':"(~details1~)"},
+                                                 'tag':{'licenseT1':"(~details1~)",'licenseT2':"(~details1~)",'licenseT3':"(~details1~)"},
+                                                           'sub_function':{'licenseS1':"(~details1~)",'licenseS2':"(~details1~)",'licenseS3':"(~details1~)"}
+                                                           }
+
+#We need to create a rnage of the lincese index in the text and after suit this license 
+#We need to create id of license for these spesific guy for example licenseA1 and after create a D and the key will be the range of the line of and and for know where we need to 
+#catch try the spesific license and after the say if the license id exist in this range or in this places 
+#in this way we actually can check whiche license suit to which place . 
+"""How it plan to happen(dinamic-license-system) : 
+#We will do it in this way first we create range for this block or what ever it is will after we add the suspicious things that can be i.e the dinamic argument or any dinamic 
+#things that this spesific place/s can achive license to use 
+#after we check which license is really was apeared we write new place that dispaly which dinamic things can get change in this spesific place anf after we need to read this 
+#spesific places and search the dinamic place that can happened and chage them in the detail and after where we need due to , because we know we have in this place lincese to 
+#this spesific dinamic thing """
+"""
+In tecnic way we actually need to insert in function parts of the text of the user every part will get the suspicious licenses that can be for , and after we will check which
+license for using actually in the place and bring to this place license for this spesific thing .
+"""
+#let's beginning from make parts of text block or what ever from one text 
+#In order to do it we need to catch all each of the <B></B> and catch every time all lines that in the same level and spaces for beginning after we will catch all the 
+# things with details symbol (~~) i.e this dinamic thing apear in the text first time according the the place that we find it we write the line when we write this name 
+# dinamic thing like argument will sure chnage and and which line exactly we will allow to change the dinamic thing and etc... at the details according the range of this 
+# block <B></B> . 
+
+#How we will get just the <B>block</B> range and all the data in lines list of the spisific this level of block i.e get in the line list of this catch of <B>block</B> 
+#just if the line beginning just after tow spaces or something like this . 
+#How we should figure out which dinamic thing suspicious for which <B>block</B> (i.e suspicious mean actually dinamic thing (like argument system that we need to put of them
+#data) and these dinamic probebly created in big block <B>block</B> and in this block we create more <B>block</B> So this block have the parent dinamic-global thing if 
+# we will put license for it for example nonlocal but we can't use or change this "argument" without it and because of this ,this argument is just suspicious thing and the 
+#mini block actually can use in this dinamic but not must) 
+# 
+# So we will create the suspicious thing for spesific lines in tow different way one is actually the range that mean
+# if the <B>block</B> mini in the same range of block <B>block</B> of the container, and the secend is rule is actually the  "space-forBiginning" i.e how much spaces was until
+#any write in the line tow ? three? . We do it because we know that in that in any create block we add tow "space-forBiginning" this is happen because the python system or js
+#in our system we just add the <B></B> in order to mark for new block .  
+
+#How we will order the data from we will actuallty suit the id that allow to the spesific range , and we will set in the key of this allow id range or what ever like this 
+# and these key will open tow thing one is actually the id of dinamic things that suit to this and secend is the rnage it self really with [range-number] and also we will use
+# in this range in oposite and not just allowDinamicRange={idBlock:[idsDinamic,[rnage-number]]} we will use the indexs range that the dinamic thing wrote in order to suit it 
+#to spesific place in the allowDinamicRange something like check every time if both range number in -> 
+text="block"
+allowDinamicRange={'idBlock':{'idsDinamic':{'suspicious':[],'canChanged':[]},'rangeBlock':[rnage-number]},...}
+pairIndexDetailsList=[[1,2],[3,4],[5,6]]
+def addAndAllowDetailsData(allowDinamicRange,text):
+  for idBlock,value in allowDinamicRange.items():
+    for pairIndexDetails in pairIndexDetailsList:
+      #For beginning and this is for it , we need to suit and insert the idsDinamic to the exact id block 
+      #and to everyblock that spesific contain the symbol creating of them , because of this we need actually to create the ranges and every rnage shoud be one of 
+      #line that suit to this spsific block according the (spasing for beginning)
+      #In order to do it we actually need to do what we plane and just in the and in order to figure out which id dinamic and be suspicious for who, we need to search every
+      # time the idblock2space and after put in the "suspicious-place" the idBlock0space['idsDinamic']['canChanged'] and every time do something like this 
+      # and in this way we achive the spesific things that suspicious for exactly lines . after we will search any license or something like this and chnage to "canChanged" place
+      
+      rangeBlock=value.rangeBlock
+      if pairIndexDetails[0] and pairIndexDetails[1] in rangeBlock:
+        if checkProperlyDetail(text[pairIndexDetails[0]:pairIndexDetails[1]]):
+          createAndAddDetailsData(text[pairIndexDetails[0]:pairIndexDetails[1]])
+          allowDinamicRange[idBlock][idDinamic].append(DataDetails.id[-1])
+          #From it we pull out the data analyze the type of details argument/tag or any else of sub-dinamic data and insert the id to 
+          #(allowDinamicRange.idBlock.idDinamic.append(DataDetails.id[-1])) why (-1) because we insert every time new details to the data and we add the last of details 
+          #now so that true to put -1. 
+        else:
+          for i in range(pairIndexDetails[0],pairIndexDetails[1]):
+            del text[i]
+          break
+      else:
+        break
+#So now we have 4 things to create 
+# 1:allowDinamicRange(Dictionary)->We will create it this way: when we create it the (idDinamic) empty list because we insert the exact id to exact place by the function 
+#addAndAllowDetailsData . So for beginning we actually need to find all the times that write <B></B> in our text/block and take the range index of them and write in 
+#rangeBlock:[rnage-number] . notice we need to increase or decrease this demarcation <B></B> , so for catch the wanted index close and open tag and increase decrease 
+#we will use in lines 56-77
+# 2:pairIndexDetailsList(List)
+# 3:checkProperlyDetail(Function)
+# 4:createAndAddDetailsData(Function)   
+# 5: we need to understand where exactly exist function and what we insert to them when we call them if this thing with details we need to change the details due to .    
+        
+def range_index(text,):
+  #That will be in order to find the range of index of the details , details that we will find by re.findall(patternDetails,text) and check every one of them 
+  #with function : checkProperlyDetail . We need the index-range of the details because we actually need search and suit thing to details from the enviroment. 
+  #Because of this we actually need to create funding index range for opening closing tag function .
+  for blockCharIndex in range(text):
+    for license in licenses_suspiciousVariableObject_forSpesificPlaceInBlock:
+      for licensesChar in license:
+        if text[blockCharIndex]==licensesChar:
+            for wantedCharIndex in range(1,len(license)):
+              if wantedCharIndex==len(license)-1 and re.search(r'\s||\n',text[blockCharIndex+wantedCharIndex+1]) and license[wantedCharIndex]==text[blockCharIndex+wantedCharIndex]:
+                print(license)
+                print('Allow to change details on the same variable/object in this spisific block.')
+              if license[wantedCharIndex]==text[blockCharIndex+wantedCharIndex]:
+                continue
+              else:
+                break
+              #So we achive type of license to change it in this spesific block and from here we just
+              #need to find the range index of this name-variable/object and change the details according what we actually listen. 
+                
+                #That allow because we actually in wanted write the "licanse" for change this spesific suspicious(the variable/object suspicious for child block that his 
+                # parent create this variable/object) variable/object when we catch in the child of license that suit for it for example: global variableName nonlocal variableName
+                # or more licenses that can apeare. the licenses contain here and we can check with this loops and according to this we can undestand if we need to change the
+                # details->(~id,name...~) on this spesific thing or not : we need to create the suspicious variable object and after create a suit license for , create D for 
+                #argument or any subFunctionOurSystem according to (~details~) . recognize all the change that the argument or every thing that we details on also it 
+                #subFunctionOurSystem(the function that we turn on and analyze after we revealed the parent functionOurSystem and also about it we have details) and after we 
+                #recognize that this block can get change to this thing and happned chaging we need to put it in the details .
+                #As well as we need to build the license for spesific block that have suspicious things .
+                # By the way we need several more functions for perform this system of dinamic argument\subfunction
+
+# In order to get the details about every thing that we want to make dinamic , we need first to make list of this animal for example in order to find all the argumentDatails
+# we need to create findall(r'\/(~(?.*)~/)',block) and after we can do what ever we want with it , for example check every part of the details if that fixed or may make check
+# the enviroment that this product site by range_index function (That function that bring us the range of the wanted thing tht we search ) we have the range-index of the 
+# wanted spesific in the block or other thing that we will choose as argument , if so we can catch things for example the word in the below of the (~details~) in this way:
+
+def deleteNotImportantSpace(text):
+  lineList=text.split("\n")
+  for lineIndex in range(len(lineList)):
+    line=lineList[lineIndex]
+    for index in range(len(line)):
+      i=len(line)-index
+      for spaceTryIndex in range(len(line[i:])):
+        if not line[spaceTryIndex]==" " and not spaceTryIndex==len(line[i:])-1:
+          break
+        if line[i:][spaceTryIndex]=='\n' and spaceTryIndex==len(line[i:])-1:
+          line=line[:len(line[i:])-1]
+  return '\n'.join(lineList)
+
+  #We will check every time if all(line[index][i:]==''): line 
+  lineNumber=block.count('\n')
+def detailsAddName(range_index_details_constituent_list,block):
+  linesList=block.split('\n')
+  indexLine=[]
+  indexLines=[]
+  i=0
+  for line in linesList:
+    for char in line:
+      i+=1
+      indexLine.append(i)
+    indexLines.append(indexLine)
+    #We did it in order to make indexs that we can every time ask list by list if the symbol detail indexs range in this list at the block or not 
+#In order to add the details and name in suit we need first create a D that contain all the types of dinamic-data that we can catch after we can check and create a new may 
+#fixed D whene we delete the inccorect sysmbol for dinamic-data . And after we pull out the data that we need in order to make the D with the spesific name of the argument/tag
+#for example or the value of (of course we will insert and modify this data according a lot of things but this is the first that we create it) in order to do it we need to find
+#the symbol of... according the index-range of in the block agter "play" with the index and achive the name value and build the data details .
+
+
+#(if we have the range-index of this spesific argument-details-mark (~details id:1,argumentType:ORD...~))  
+
+#The process of the "recognize-subFunction" for mean time tag/argument/subClass we will mark open block like function\method\system-function\system-function-functionBlock(
+#despite we don't realy know how these type of function will show) . We actually will keep on these argument with (details) in argumentDetails={A:{id:1,type:ORD,globalMarkId:copy123},B{id:1...}}
+#So and we will catch the index that apears first time and take the value and after if we see more times the same name in the code we decide if change the details of the same
+#argument or something like this , first if the range block of the first variable according the index consider in the new variable that we found according to this tag every time 
+#we open any block -> <B></B> the second we need to understand if the variable that wrote consider in the range-variable-same-page that actually mean that we will create 
+#str block for every level of block i.e we have function1... function2... and both on the same level of block but they don't have the same block in eventully so we catch 
+#for example all the line that with "\n(tow spaces)  " and after saperate this str that we will create with join to tow part in our cases one is the part1 with firsts <B>block</B>
+#and the second with <B></B> next . why we do it ? we actually will create in these way sparetion and we will know who is argument that sure not associate to our argument and
+#and who is suspicious for . And after we search the range of index of this block and search in every of them the argument and things that we put details on after we have 
+#the suspicious sub-function range in the exact range we can check more things we that really suit or not with the function that range of index according to part of str that
+#we put of . 
+
+#The three part of (recognize sub things for change details and etc...) is actually pull out every block and and function things and understand if exist variable\object that
+#suspicious in these mini-block after we search nonlocal or global in suit case with for..in and our range-index function .
+
+#2 example with 
+#More innovetive to the "tag" , we can buker thing with the tag and simply change them and modify them that mean we have actually tree condition to the "tag" one is in 
+# the argument tow is just the tag and id and thing that we want in like example one and tow in suit and the three is actually can be the same with example 2 or something
+
+#3 like this :idArgument?("Elior")!(function(idArgument)~(idT?("Banda")~containT("Elior The King")!(123))
+
+#let's break every example down : 
+# 1: we chack the argument say if direct ([0]) "after" (->) the  (idArgument) that     detemined ("it's (~) mean "and")
