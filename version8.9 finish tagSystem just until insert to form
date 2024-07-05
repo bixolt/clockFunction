@@ -53,6 +53,7 @@
 #But if it openingTagBefore we will increase the index of close tag that we will suit to opening i.e the suit closing tag will be blockTag={opening:[lowest to higher],
 #closing:[lowest to higher]} 
 import re
+import blockFunction5
 scanResultTag={}
 patternForSearchTagsPatternExample={'typeCode':{'statusTag':{'typeTag':'tag'}}}
 patternForSearchTags={'code':{'open':{'block':'<B>'},'close':{'block':'</B>'}}}
@@ -80,35 +81,46 @@ def linesListsCodeIndexs(code):
     linesListsTextInCode.append(indexesLine)                                    
     indexesLine=[]  
   return linesListsTextInCode
-def createIndexPlaceTag(code,patternForSearchTags,scanResultTag):                                    
-  linesIndexListsCode=linesListsCodeIndexs(code) 
-  dictionaryCodeLine={}
+scanResultTagOrder={}
+for typeCode in patternDefaultDatas['dataCode'].key():
+  for idCode,code in patternDefaultDatas['dataCode'][typeCode].items():
+    for patternForSearchTagsValue in patternDefaultDatas['patternDataStatic']['tags'][typeCode]:
+     patternForSearchTags={typeCode:patternForSearchTagsValue}
+     scanResultTag=createIndexPlaceTag(code,patternForSearchTags)
+     scanResultTagOrder=orderPairsTag(scanResultTag)
+def createIndexPlaceTag(code,patternForSearchTags):                                    
+  linesIndexListsCode=linesListsCodeIndexs(code)
+  dictionaryCodeLine={}                                                       
   for lineCodeIndex in range(len(linesIndexListsCode)):
     dictionaryCodeLine[f'{lineCodeIndex}']=0                            
   for typeCode in patternForSearchTags:                                    
     for tagStatus,tags in patternForSearchTags[typeCode].items():                                    
-      for textIndex in range(len(text)):                                     
+      for textIndex in range(len(code)):                                     
         for tagType,tag in tags.items():                                    
-          if text[textIndex]==tag[0]:                                    
+          if code[textIndex]==tag[0]:                                    
             for tagIndex in range(1,len(tag)):                                    
-              if tag[tagIndex]==text[textIndex+tagIndex]:
+              if tag[tagIndex]==code[textIndex+tagIndex]:
                 if tagIndex==len(tag)-1:
                    for indexesLineIndex in range(len(linesIndexListsCode)):
                      if [textIndex,textIndex+tagIndex] in linesIndexListsCode[indexesLineIndex]:
-                        line=text[linesIndexListsCode[indexesLineIndex]]
+                        line=code[linesIndexListsCode[indexesLineIndex]]
                         dictionaryCodeLine[indexesLineIndex]+=1 
                         break
                    catchingsIndexStartAndCatchingIndexEnd=searchIndexRangeAccordingNames(line,[tag]) #Return the area with range index according the names ->[[start1,end1],[start2,end2]] 
                    tagIndexStart=catchingsIndexStartAndCatchingIndexEnd[dictionaryCodeLine[indexesLineIndex]][0]
                    tagIndexEnd=catchingsIndexStartAndCatchingIndexEnd[dictionaryCodeLine[indexesLineIndex]][1]
                    if possibleAfterAndEndInText(line,{'before':['every-possible-thing/s-can-be-after-tag-before'],'after':['every-possible-thing/s-can-be-after-tag-after']},
-                                                tag,tagIndexStart,tagIndexEnd,details):
-                     if not scanResultTag[typeCode][tagStatus]:
-                       if not scanResultTag[typeCode]:
-                         scanResultTag[typeCode]={}
-                       scanResultTag[tagType][tagStatus][typeCode]={}
-                       scanResultTag[tagType][tagStatus][typeCode]['start']=[]
-                       scanResultTag[tagType][tagStatus][typeCode]['end']=[]
+                                                                            tag,tagIndexStart,tagIndexEnd,details):
+                     
+                     if not scanResultTag[tagType][tagStatus][typeCode]: 
+                        if not scanResultTag[typeCode][tagStatus]:
+                          if not scanResultTag[typeCode]:
+                            scanResultTag[typeCode]={}
+                          scanResultTag[typeCode][tagStatus]={}
+                        scanResultTag[tagType][tagStatus][typeCode]={}
+                        scanResultTag[tagType][tagStatus][typeCode]['start']=[]
+                        scanResultTag[tagType][tagStatus][typeCode]['end']=[]
+
                      scanResultTag[tagType][tagStatus][typeCode]['start'].appned(textIndex)
                      scanResultTag[tagType][tagStatus][typeCode]['end'].appned(textIndex+tagIndex)
 def possibleAfterAndEndInText(text,possibles,wanted,details):
@@ -122,10 +134,10 @@ def chageName(code,catchNamesLists):
     if code==f'{code}':
       for new,old in catchNamesLists:
         for indexCode in range(len(code)):
-          if code[indexCode]==old:
+          if code[indexCode]==old[0]:
             for indexCharName in range(1,len(old)):
               if old[indexCharName]==code[indexCode+indexCharName]:
-                if indexCharName==len(old):
+                if indexCharName==len(old)-1:
                   #if wantedConditionInInviromentOf(code[indexCode+indexCharName],condition)
                   for deleteIndexCode in range(indexCode,indexCode+indexCharName):
                     del code[deleteIndexCode]
@@ -141,37 +153,29 @@ def chageName(code,catchNamesLists):
 scanIndexTagOrderPatternExample={'tagType':{'statusTag':{'codeType':{'start':['numbers...'],'end':['numbers...']}}}} 
 scanIndexTagOrderExample={'blockMarkRequest':{'open':{'block':{'start':[1,2,4],'end':[3,5,6]}},'close':{'block':{'start':[100,1001],'end':[101,1002]}}}}
 #open/close is connect to open and close tag but the start and end is index start to this tag and the end index.
-scanTagIndex={{{}},{{}}}
+scanTagIndex={}
 pairsCodeTag=[]
-def orderPairsTag(text,scanResultTag):
+def orderPairsTag(scanResultTag):
   for tagType in scanResultTag.key():
     for codeType in scanResultTag[tagType]['open'].key():
       for indexTagIndexOpen in range(len(scanResultTag[tagType]['open'][codeType]['start'])):
         if scanResultTag[tagType]['open'][codeType]['start'][indexTagIndexOpen].isdigit():
           howMuchOpeningTag=0
-          for closeTagIndex in scanResultTag[tagType]['close'][codeType]['start'][:indexTagIndexOpen]:
-            if closeTagIndex>scanResultTag[tagType]['open'][codeType]['start'][indexTagIndexOpen]:
+          for closeTagIndex in scanResultTag[tagType]['close'][codeType]['start'].key()[indexTagIndexOpen:]:
+            if closeTagIndex>scanResultTag[tagType]['open'][codeType]['start'].key()[indexTagIndexOpen]:
               howMuchOpeningTag+=1
-          if not scanTagIndex[tagType]['open'][codeType]['start']:
-            if not scanTagIndex[tagType]['open'][codeType]:
-              if not scanTagIndex[tagType]['open']:
-                if not scanTagIndex[tagType]:
-                  scanTagIndex[tagType]={}
-                for statusTag in scanResultTag[tagType].key():
-                  scanTagIndex[tagType][statusTag]=scanResultTag[tagType][statusTag]  
-              for statusTag in scanResultTag[tagType].key():
-                scanTagIndex[tagType][statusTag][codeType]=scanResultTag[tagType][statusTag][codeType]
-            for statusTag in scanResultTag[tagType].key():
-              for when in scanResultTag[tagType][statusTag][codeType].key():
-                scanTagIndex[tagType][statusTag][codeType][when]=scanResultTag[tagType][statusTag][codeType][when]
-          for statusTagIndex in range(len(scanResultTag[tagType].key())):
-              for when in scanResultTag[tagType][statusTag][codeType].key():
-                if scanTagIndex==0:
-                  scanTagIndex[tagType][scanResultTag[tagType].key()[statusTagIndex]][codeType][when][indexTagIndexOpen]=scanResultTag[tagType][scanResultTag[tagType].key()[statusTagIndex]][codeType][when][indexTagIndexOpen]
-                else:
-                  scanTagIndex[tagType][scanResultTag[tagType].key()[statusTagIndex]][codeType][when][indexTagIndexOpen]=scanResultTag[tagType][scanResultTag[tagType].key()[statusTagIndex]][codeType][when][indexTagIndexOpen+howMuchOpeningTag]
-  form['tag']=scanResultTag
-
+              if not scanTagIndex[tagType]:
+                  scanTagIndex[tagType]=scanResultTag[tagType]
+              for statusTagIndex in range(len(scanResultTag[tagType].key())):
+                for when in scanResultTag[tagType][scanResultTag[tagType][statusTagIndex]][codeType].key():
+                  if scanResultTag[tagType].key()[statusTagIndex]=='open':
+                    scanTagIndex[tagType][scanResultTag[tagType].key()[statusTagIndex]][codeType][when][indexTagIndexOpen]=scanResultTag[tagType][scanResultTag[tagType].key()[statusTagIndex]][codeType][when][indexTagIndexOpen]
+                  else:
+                    scanTagIndex[tagType][scanResultTag[tagType].key()[statusTagIndex]][codeType][when][indexTagIndexOpen]=scanResultTag[tagType][scanResultTag[tagType].key()[statusTagIndex]][codeType][when][indexTagIndexOpen+howMuchOpeningTag]
+                  
+  clockFunction5.form['tag']=scanResultTag
+#Why we can't do anything in function (createIndexPlaceTag), actually we can but we need to "open" the system tow times first for close (or opposite) and secend for open 
+#and so to create the (howMuchOpeningTag) like what we did and delete thing and insert reapete to the wanted place and exact index.
 
 
     for pair in pairs:
@@ -500,3 +504,4 @@ def detailsAddName(range_index_details_constituent_list,block):
 
 #let's break every example down : 
 # 1: we chack the argument say if direct ([0]) "after" (->) the  (idArgument) that     detemined ("it's (~) mean "and")
+
