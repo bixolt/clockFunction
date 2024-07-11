@@ -1,0 +1,530 @@
+#For summery of what we did in generaly at the data,apcacialPattern,dinamic and static data,stages of beginning run until the end (aprowimately without perform just big 
+# explanation) in reasechh 4 for our app we check all the possible way to inset data in dinamic/static way and understand the different actually figure out from stage 3
+#what need to get change and where the subdata should to be  and we arrived to this structure {category:{BigName:{exatlyName:[data]}}} because the category in general
+#are the same for every type of data and the function block or every guy that we wanna to get data about is get different every time and because of this we insert the 
+#data like this after is to create dinamic data like form we get this data just we run the loops or get every result that we need in the three stage (perform) that combined
+#three of things one is the response request... every data that we sum from the loops and read the blocks (in order to get this data we will use in the data itself 
+# for example with the pattern to recognize the exactly request that happened with marks at the block and after for example pull out the name of the function that we reaveled)
+# Ok so after we have the data from the block and more... in the form we actually in the stage 3 in this stage we will perform this things on the block with the data the form
+# and with the block of course in shortly word modify the block and insert back . So now the blocks place according the "mini-block"<-
+# default using blocks that we can chenge how we want put function argument and more and after paste in real-block and every real-block should to get this list of mini-function
+#and passibility to modify them and in the mark paste we can decide from which of real-block we want to pull out the spesific mini-block and using in arguments and function 
+# that we want and this get decide in the paste) <- in very shortly from 2 3 search about mini block and paste. 
+# and may more things that we will add , we must to plan the place of blocks , like the data structure in general so actually we have property that the same for block 
+#and just we insert idfferent data every time for different block (we have name of the real-block according the A1,B1,C1... and have the name of the mini-block with
+#a1,b1,c1...)  we will build this this place exactly the same of every static data and because of this we actually will build this place at the containing-object blocks
+#at the function createStatic <- because of this we will change the name of this function to createStaticAndBlocks 
+# we will the structuer we will use in order to filled the thing is it : [[[data],[the same category just different block get the data]],[other type of data ]]
+#or passible to put something like this direct in the function -> {typeData:{block:[]}}<- notice that the hendler of this building should to be slightly different 
+#here we don't have "exactly-block" like every data that have the name of the data like function and the exact like functionName1.
+#The resulting of the process is basically block that untill at str and that mean every function that in the system should to turn on just in the block and just in the end
+#of the process when we have the now list with new block according the requerments we can modify or eval it what mean also for the next stages of development we will may
+# develop system security of every block that we seccess to create (that mean every requerments in the block don't failed) have every mark of security block to user defending
+# if the user will turn on eval or something else that can risk the system . 
+
+# let's build what we did already : 
+import re
+exampleWorkingDataStatic=[[[['default-data1','default-data2-sepesificThings'],['default-data in other sepesificThings']],['default-data in other dataName']...,...]...] 
+
+def createStaticsAndCode(data,patternDefaultDatas):
+  if data==None:
+    data=[[[[['staticData']]]],[[['Code']]]]
+  if patternDefaultDatas==None:
+     patternDefaultDatas={'staticData':{{'dataName':{'dataNamePrecisely':{'typeCode':{'data':[]}}}},'differentDataName'},'codeData':{'realCode':{'typeCode':{}},'idData':{'typeCode':{'id':[]}}},
+                          'fundamntalData':{'fundamntalType':{'codeType':[]}}}
+  for subDataClient,dataNamePttern in zip(data[0],patternDefaultDatas['staticPatternSearch'].key()):
+    for subDataClient2,dataNamePrecisely in zip(subDataClient,dataNamePttern.key()):
+       for subDataClient3,typeCode in zip(subDataClient2,dataNamePrecisely.key()):
+          for staticData in subDataClient3:
+            if not isinstance(patternDefaultDatas[dataNamePttern][dataNamePttern][dataNamePrecisely],list):
+               patternDefaultDatas['staticData'][dataNamePttern][dataNamePttern][dataNamePrecisely]=[]
+            patternDefaultDatas['staticData'][dataNamePttern][dataNamePttern][dataNamePrecisely].append(staticData)
+  for typeCode in patternDefaultDatas['staticData']['pattern']['patternId'].key():
+    for patternId in patternDefaultDatas['staticData']['pattern']['patternId'][typeCode]:
+      for subHighLevelData in data[1]:
+        for subData in subHighLevelData:
+           for code in subData:
+              match=re.match(patternId,code[1:])
+              if match:
+               if not patternDefaultDatas['codeData']['realCode'][typeCode]:
+                 patternDefaultDatas['codeData']['realCode'][typeCode]={} 
+               patternDefaultDatas['codeData']['realCode'][typeCode][match.group()]=code
+               patternDefaultDatas['codeData']['idData'][typeCode]['id']=match.group()
+    
+    patternDefaultDatasFilled=patternDefaultDatas
+    return patternDefaultDatasFilled
+patternDefaultDatasFilled=createStaticsAndCode()
+form={'status':{},'response':{'error':{'request':{},'runing':{}}},'requests':{'precisely':{}},'name':{}}
+additionaForm={'error':['request','runing'],'requests':['name',{'mark':['block','text']},
+{'details':[{'block':[{'dinamic-name':['argument','tag']}]}]}]},
+{'internal-request':['private-request-details']}
+    #The meaning of "createForm" is actually create function that analyze the block from this data 'patternDefaultBlock':{'property':{'blockName':['data']}}'
+    # i.e for beginning we will do loops about the patternDefaultDatasFilled['blockItself'] and analyze the data from every time according the 'patternData' according what 
+    #we said we will fined the marks for any function that we need to turn on due to according the pattern . Notice in this case we will don't read and create and make 
+    #thing for the request and for the things that we reaveled in the block ,we just create the intentions check the request or every spacial things in the blocks 
+    #and bring to the form in exactly place for exactly thing
+    # "dinamic-data" becaus the "user" that use in this app can design and build according the input more precisely according the things that he write in the blocks that
+    # he want to change . in shortly this "form" actually say what we want exactly in the real-block and say every thing we want to change in our data .
+    #The stages of this function -> first we will discover every general mark like the version 3 with the pattern in the requestsListGenerally in the patternData 
+    #for each one of the block that and after this searching we check the request i.e the fixed of the mark that we found after we make the spesific pattern
+    #we findall and insert the organs in the list that soport this request for this spesific issue in shortly in this way we insert the data in exactly place for currently block
+    #in the form this just adding we also add soport of every checking or process that we do in this function to the form
+    #that mean after we write a code for this function 'createForm' we must to make function -> "performForm" in order to perform all the things wanted things according the 
+    # details we pick form the "createform" function .
+def additionFormFunction(form,additionaForm):
+    for typeOf,subData in additionaForm.items():
+        if not form[typeOf] in form:
+              form[typeOf]={}       
+    insertInteranlData(subData,form[typeOf])
+additionFormFunction(form,additionaForm)
+
+
+def insertInteranlData(subData,current_data):
+  if not isinstance(subData,dict) and isinstance(subData,str):
+     if not subData in current_data:
+        current_data[subData]={}
+          #The aim behind it is to add the subDatas that we want to the form and after equel to empty {} , in order to add sub data every time like {blockName:[]}
+          #the rules here , when we put sub data in ([]) this is the sub number level tow of dinamic and in it we insert when we want the sub most dinamic data 
+          #and isert which data we want in [] . this idea will be look like this in the form (type of data in our system) 'error':{'request':{blockName:[]}}
+  else:
+    for subInternalName in subData.key():
+      if not subInternalName in current_data:
+        current_data[subInternalName]={}
+      insertInteranlData(subData[subInternalName],current_data[subInternalName])
+    #In order to make to do this procces that will make all the sub data in the from and after to insert the fundamental data like id block where we need 
+    #we can in this case to do recursive when this statment happen isinstance(form[typeOf],dict) and create a list that will contain all the "key" we check and return any dict
+    #and after we will just call to the function that create the empty data in spesific place like this :
+    #But the problem with just put this function that we may more things in the same condition that mean may in this proccess form[key[i]]={} we delete thing in 
+    #the second we need to put second loop in order to get the value of and the key .
+    #In shortly we need to find way to call the function that turn on again the searching on the element issue and contain all of the keys that we have from this and 
+    #sparete the keys we need to active for every organ it self and to care about and so to put in . work with additionalForm and the form in the same time and in the runing 
+    #i.e to care about one thing in the additionalForm function and to add or do something in the Form in the same time that we decide for other fucntion or things .
+    #if we insert all the data in createSpesific we can catch it . 
+
+#fundamentalData that we want to change or not and insert to any place in form 
+#We actually will insert this type of fundamntal data to the form according to the fundamntal data in the fundamntal place at the data place in static data we insert .
+#We have tow different type "fundamntal-data" one is like the data we insert according the ordinary things that we insert in the "static-data" and second is fundamntal data
+#we insert according to things that in the place that exist for fundamntal-data in static data . But all the sources from static-data. 
+
+#The "fundmantalThing" is actually very important because of it do tow thing 1: create the funmantal data with the material we give and the function that suit 
+#2 : also because of the function that choise according the fundamntalThing we know where exact to insert the fundamntal data to the form 
+import itertools
+def create_indexed_list(text,list):
+   organRangeInText=[]
+   current_index=0 
+   for organ in list:
+      start_index=text.find(organ,current_index)
+      end_index=start_index+len(organ)-1
+      organRangeInText.append(start_index,end_index) 
+      current_index+=end_index+1
+   return organRangeInText  
+
+
+def push(text,index,data):
+   text[index:]+data+text[:index]
+
+
+def deleteRange(text,deleteRange):
+  for index in range(deleteRange[1]-1,deleteRange[0],-1): 
+    del text[index]
+    return text
+
+
+def addFormFundamental():
+    for fundamntalType in patternDefaultDatasFilled['fundamntalData'].key():
+        for codeType,modifyfundamntalData in patternDefaultDatasFilled[fundamntalType]:
+          paths=createPathsForFormAndForModifyData(fundamntalType,codeType)
+          fundamntalDataForForm=createAndInsertFundamntalData(modifyfundamntalData,paths,fundamntalType,codeType)
+def createAndInsertFundamntalData(modifyFundamntalData,paths,fundamntalType,codeType):
+  typeUsingPaths={'insertPlace':['form'],'auxiliralyContentForModifyData':['staticData']}
+  conditionsToModifyFundamntalData={'codeType':{'fundamntalType':{'form/or other insertPlace':{'function1':
+                                                                          [modifyFundamntalData,
+                                                                           f"""paths['staticData'][1],paths['staticData'][2] ~ data!==2 and value==1^^
+                                                                              'more condition and data for the same argument""" 
+ 
+                                                              ,'otherArgument']},'function2':['argument'],'function3':['all!staticData^^moreRequest for data in this argument'
+                                                                                  ,modifyFundamntalData]},'codeType2':
+                                                                                  {'fundamntalType2':{'function':'codeType$fundamntalType$insertPlace$function'
+                                                                                                      }}}} #paste data from other place in this dictionary.
+  for insertPlace in typeUsingPaths['insertPlace']:
+     for function,arguments in conditionsToModifyFundamntalData[codeType][fundamntalType]:
+        argumentsPlace=()
+        if isinstance(function,str) and isinstance(arguments,list):
+          for argument in arguments:
+            argumentsPlace+=(argument)
+          functionStr=f'{function}{argumentsPlace}'
+          data=eval(functionStr) 
+          for path in paths[insertPlace]:
+            insertData(form,path,data)
+  def allCommand(dataForFunctionCommand):
+    pathsData=paths[dataForFunctionCommand]
+    data=get_nested_data(patternDefaultDatasFilled[dataForFunctionCommand],pathsData) 
+    return data    
+  #In this case simply give all the data from the spesific place 
+                                                  
+  #every data or value have something else to do according the proccces we write to this 'value' see in function find_paths_by_condition. 
+  internalCommands={'all':allCommand(data)}
+  preparationImportData('function', conditionsToModifyFundamntalData, codeType, fundamntalType, 
+                  pathsType=None, runNumber=0, pathsInsertCopiedData=[])
+  for function,argumentsindex in zip(conditionsToModifyFundamntalData[codeType][fundamntalType].keys(),range(len(conditionsToModifyFundamntalData[codeType][fundamntalType][function][argumentsindex]))): 
+     if isinstance(conditionsToModifyFundamntalData[codeType][fundamntalType][function][argumentsindex],str):
+        requestForDataInArgumentPlaces=conditionsToModifyFundamntalData[codeType][fundamntalType][function][argumentsindex].split('^^')
+        organRangeInText=create_indexed_list(conditionsToModifyFundamntalData[codeType][fundamntalType][function][argumentsindex],requestForDataInArgumentPlaces)
+        index_roof=0
+        for requestForDataInArgumentPlace in requestForDataInArgumentPlaces:
+            skip_outer_loop=False
+            for internalCommand in internalCommands.keys():
+              internalCommandLength=len(internalCommand)
+              requestForDataInArgumentPlaceSearchInternalCommand=requestForDataInArgumentPlace[0:internalCommandLength-1]
+              if requestForDataInArgumentPlaceSearchInternalCommand==internalCommand and requestForDataInArgumentPlace[internalCommandLength]=='!':
+                dataForFunctionCommand=internalCommand[len(internalCommand):]
+                data=internalCommands[internalCommand](dataForFunctionCommand)
+                oragnRange=organRangeInText[index_roof]
+                for oragnRange_index in range(*oragnRange):
+                  del conditionsToModifyFundamntalData[codeType][fundamntalType][function][argumentsindex][oragnRange_index]
+                push(conditionsToModifyFundamntalData[codeType][fundamntalType][function][argumentsindex],oragnRange[0],data)
+                skip_outer_loop=True
+            if skip_outer_loop:
+               index_roof+=1
+               continue
+            sparateBetweenDataAndCondition=re.findall(r'\s+\~\s+',requestForDataInArgumentPlace)
+            datas=sparateBetweenDataAndCondition[0].split(',')
+            for indexData in datas :
+               spaseSplit=re.findall(r'\s+',indexData[datas])
+               if spaseSplit[1]:
+                  datas[indexData]=spaseSplit[0]
+                  datas=datas[indexData:]
+                  break
+            if len(sparateBetweenDataAndCondition)>1:
+              rangeDataIndex=create_indexed_list(conditionsToModifyFundamntalData[codeType][fundamntalType][function][argumentsindex]
+                                   [[oragnRange][0]:oragnRange[1]],datas)
+              for IndexData in range(len(datas)):
+                  condition=sparateBetweenDataAndCondition[1]
+                  pathsData=find_paths_by_condition(condition,eval(datas[IndexData]))
+                  if pathsData[0]:
+                    for pathData in pathsData:
+                      withDeletes=deleteRange(conditionsToModifyFundamntalData[codeType][fundamntalType][function][argumentsindex]
+                      [[oragnRange][0]:oragnRange[1]],rangeDataIndex[IndexData])
+                      conditionsToModifyFundamntalData[codeType][fundamntalType][function][argumentsindex][[oragnRange][0]:oragnRange[1]]=withDeletes
+                      #Because of we get actually contituent-list with path to the wanted data according the condition we need to conccet data+path 
+                      dataForArgument=get_nested_data(eval(data),pathData)
+                      push(conditionsToModifyFundamntalData[codeType][fundamntalType][function][argumentsindex][[oragnRange][0]:oragnRange[1]],
+                          rangeDataIndex[IndexData][0],dataForArgument)                      
+                  else:
+                    dataForArgument='no suit data'
+                    deleteRange(conditionsToModifyFundamntalData[codeType][fundamntalType][function][argumentsindex],oragnRange)
+                    push(conditionsToModifyFundamntalData[codeType][fundamntalType][function][argumentsindex],oragnRange[0],dataForArgument)
+            elif sparateBetweenDataAndCondition[0]:
+              for data in datas:
+                dataForArgument=eval(data)
+              deleteRange(conditionsToModifyFundamntalData[codeType][fundamntalType][function][argumentsindex],oragnRange)
+              push(conditionsToModifyFundamntalData[codeType][fundamntalType][function][argumentsindex],oragnRange[0],dataForArgument)  
+            index_roof+=1
+  #Uploud the data in insertPlace. 
+def evaluate_condition(condition_str, data):
+  """
+  Evaluate the condition string on the value.
+  """
+  try:
+      return eval(condition_str, {'data': data})
+  except Exception as e:
+      print(f"Error evaluating condition: {e}")
+      return False
+
+def find_paths_by_condition(data, condition_str, path_prefix=[]):
+    """
+    Recursively find paths in the data that match the condition.
+    """
+    matching_paths = []
+
+    if isinstance(data, dict):
+        disassemblyData = data.items()
+    elif isinstance(data, list):
+        disassemblyData = enumerate(data)
+    else:
+        return matching_paths
+
+    for key, value in disassemblyData:
+        new_path_prefix = path_prefix + [key]
+        if evaluate_condition(condition_str, value):
+            matching_paths.append(new_path_prefix)
+        matching_paths.extend(find_paths_by_condition(value, condition_str, new_path_prefix))
+
+    return matching_paths
+
+
+ 
+
+           
+  #We will read the str arguments of function "modify" tit and insert as condition,data to function that give path for this data and after insert the data to spesific
+  #argument to function . 
+
+   #Function planing:
+     #Put the wanted datas from the "fundamntalData" in correct function according the "fundamntalType", modify and more the "fundamntalData" according to data in
+     #paths['staticData'] and insert the wnated things to form accroding path['form']. 
+  
+     #(that ok we choise the function that we active on the data just according the "fundamntalType" 
+     #because the "fundamntalData" that in the "patternDefaultDatasFilled" we insert how much data we want in one "fundamntalType" and we
+     #can create how much we want "fundamntalType"
+     #and create request for happining for every one of them (turn-on function) . as well as we create condition(paths) according the "typeCode" (see how path conditions build
+     # in 'createPathsForFormAndForModifyData' in 'fundamntalTypesPathsInterface' )  ).
+"""for fundamntalTypePaths,pathsBig in paths.items():
+     for pathsType in pathsBig.key():
+        for path in pathsBig[pathsType]:"""
+
+    #So item equel to 'all' in this tree i.e in this case should be -> 
+    # staticData['data1']['data2'][staticData['data1']['data2'].key()]['data4']
+#The porpuse to return it in this case in 'fundamntalTypesPathsSystemForm' : 
+# ['path1']['path2']['pathA']['path4'],
+#   ['path1']['path2']['pathB']['path4'],
+#    ['path1']['path2']['pathC']['path4']
+#if staticData['path1']['path2'].key()==['pathA','pathB','pathC']       
+def createPathsForFormAndForModifyData(fundamntalType,codeType):
+
+    fundamntalTypesPathsInterface = {
+        'typeCode':{ 'fundamntalType': [
+            [['pathForm1', 'all', 'pathForm3', 'pathForm4'], ['otherFormPath']],
+            [['otherStaticDataPath'], [['pathModifyStaticData1', 'pathModifyStaticData2', 'all', 'pathModifyStaticData4']]],['other ']
+        ],'fundamntalType2':['fundamntalType-typeCode'],'fundamntalType3':[['fundamntalType$typeCode'],['fundamntalType$typeCode']]},
+      'typeCode2':{'fundamntalType2':['fundamntalType$typeCode'],
+      'fundamntalType3':[['fundamntalType$typeCode$staticData$3'],['fundamntalType$typeCode$form'],["""otherPaths "typeUsingPaths" look in function 
+                                                                                                    "createAndInsertFundamntalData" """]]} 
+    }
+    # the "$" say in "pathDrought" which data we want to place in this place according the conditions of the function that care about it and thec data this spesific dictionary.
+    pathsType = ['form', 'staticData']
+    preparationImportData(fundamntalType,codeType,fundamntalTypesPathsInterface,pathsType)
+
+    pathsTypeAndPathsForFormUsing = {}
+    for spesificPathsTofundamntalTypes in fundamntalTypesPathsInterface[codeType]:
+        for pathIndex in range(len(spesificPathsTofundamntalTypes[fundamntalType])):
+            fundamntalPathsInterface = []
+            for itemIndex in range(len(spesificPathsTofundamntalTypes[fundamntalType][pathIndex])):
+                if spesificPathsTofundamntalTypes[fundamntalType][pathIndex][itemIndex] != 'all':
+                    fundamntalPathsInterface.append([spesificPathsTofundamntalTypes[fundamntalType][pathIndex][itemIndex]])
+                else:
+                    partPath = spesificPathsTofundamntalTypes[fundamntalType][pathIndex][:itemIndex]
+                    dynamic_keys = get_nested_keys(patternDefaultDatasFilled, partPath)
+                    fundamntalPathsInterface.append(list(dynamic_keys))
+          
+            paths1 = [[]]
+            for pathInterface in fundamntalPathsInterface:
+                newPaths1 = []
+                for item in pathInterface:
+                    if paths1[0]:
+                        for currentPath in paths1:
+                            newPaths1.append(currentPath + [item])
+                    else:
+                        newPaths1.append([item])
+                paths1 = newPaths1
+          
+            print(f"paths1 after processing {spesificPathsTofundamntalTypes[fundamntalType][pathIndex]}: {paths1}")
+            pathsTypeAndPathsForFormUsing[pathsType[pathIndex]] = paths1
+
+    return pathsTypeAndPathsForFormUsing
+def get_nested_keys(data, path):
+    # Traverse the data structure following the keys in the path
+    # and return the keys of the last node
+    for key in path:
+        data = data[key]
+    return data.keys()
+
+def get_nested_data(data, path):
+    # Traverse the data structure following the keys in the path
+    # and return the value of the last node
+    for key in path:
+        data = data[key]
+    return data
+
+def insertData(Area, path, data):
+    # Traverse the data structure following the keys in the paths (excluding the last key)
+    for key in path[:-1]:
+        Area = Area[key]
+    # Insert the data at the final destination
+    Area[path[-1]] = data
+
+def insertFuntamntalDataForm(form, data, fundamntalPathsSystem):
+    # Insert fundamental data into the form structure based on the paths in fundamntalPathsSystem
+    for paths in fundamntalPathsSystem['form']:
+        for path in paths:
+            current = form
+            for item in path[:-1]:
+                if item not in current:
+                    current[item] = {}
+                current = current[item]
+            current[path[-1]] = data
+
+def preparationImportData(systemType, system, codeType, fundamntalType, 
+                          pathsType=None, runNumber=0, pathsInsertCopiedData=[]):
+    # Prepare paths for form or static data based on the given interface and insert them into the system
+    wantedPaths = system[codeType][fundamntalType]
+    for wantedPathIndex in range(len(wantedPaths)):
+      if not isinstance(wantedPaths[wantedPathIndex],str):
+          if re.search(r'$', wantedPaths[wantedPathIndex]):  # Check if the path contains a hyphen
+              if wantedPaths[wantedPathIndex].count('$') == runNumber:
+                  commandPath = wantedPaths[wantedPathIndex].split('$')
+                  if systemType=='paths':
+                    if len(commandPath) >= 3:
+                        commandPath[2] = pathsType[commandPath.index(commandPath[2])]
+                    if len(commandPath) >= 4:
+                        commandPath[3] = int(commandPath[3])
+                  # Handle additional conditions and modify paths accordingly
+                  insertDataAccordingFundamntalPaths(commandPath, system, fundamntalType, pathsInsertCopiedData)
+              else:
+                  print(f"wantedPath: {wantedPaths[wantedPathIndex]} isn't true")
+      else:
+          if isinstance(wantedPaths[wantedPathIndex], list):
+              pathsInsertCopiedData.append(wantedPathIndex)
+              preparationImportData(wantedPaths[wantedPathIndex], system, codeType, fundamntalType, pathsType, runNumber, pathsInsertCopiedData)
+
+def insertDataAccordingFundamntalPaths(commandPath, system, codeType, fundamntalType, pathsInsertCopiedData):
+    # First, get the data according to the command path and then insert it into the appropriate location
+    data = get_nested_data(system, commandPath)
+    pathForPaste = [codeType, fundamntalType] + pathsInsertCopiedData
+    insertData(system, pathForPaste, data)
+
+
+"""         
+  for category in form:
+      if isinstance(category,dict):
+        if category=={}:
+            for dictNameIssue,content in dictNamesIssue.items():
+              category[dictNameIssue]=content
+        else:
+            insertFuntamntalDataForm(category)
+      else:
+          print('Failed to insert the fundamental data , your form incorrect')
+          addFormFundamental(form,patternDefaultDatasFilled['codeData']['idData'])"""
+      #The names in patternData is dictonary that contain all the id name of every items for example form,patternDefaultDatasFilled['patternData']['names']['blocks']
+      #all the id block A1,B1,C1... and we want to insert all of these to all category in form
+    #after we will build this function we will know if we can insert the "neseccary-data" in the data in this function i.e combined things that neseccary for write soport
+    # in the form or write this things that consider to neseccary direct in createStaticsAndBlocks or in function that will run befor .  
+    #we wnat to check if in the place that we insert this data or at least the data that we want to create spesific in form as empty place or place with just these value 
+    #from the names dictionary in the data base
+def insertFuntamntalDataToForm():
+    for codeType in patternDefaultDatasFilled['codeData'].key():
+      for idCode in patternDefaultDatasFilled['codeData'][codeType]:
+        code=patternDefaultDatasFilled['codeData'][codeType][idCode]
+        for markType,generalyPatternlist in patternDefaultDatasFilled['staticData']['request']['requestsGenerally'][codeType].items():
+          for generalyPattern in generalyPatternlist:
+            if re.findall(generalyPattern,code):
+              generalyRequests=re.findall(generalyPattern,code)
+              if not form['requests']['generalyRequest'][markType][codeType][idCode]:
+                form['requests']['generalyRequest'][markType][codeType][idCode]=[]
+              form['requests']['generalyRequest'][markType][codeType][idCode].append(*generalyRequests)
+            #So basically the one argument zip is consistunet-list that contain in every list ,every passible generaly pattern for for this spesific mark in block
+            # and the the second argument is actually the all the "real-block" that we wrote in one list 
+                #patternStagesInStaticDataExample={'request':{'patternStagesNameRequst':{'typeCode':{'patternsStage':['a','b','c'],'patternsNextStage':[1,2,3,4]},'patterns with different base'}}}
+                #The porpuse in this case is actually to insert the correct stage pattern to every stage of the general request we catch and after active these exact pattern to on the general 
+                #and catch the every part of the request and put the request mark dismantled(מפורק) as contituent-list . 
+                
+  
+            for generalyRequest in generalyRequests:
+              for patternsStagesRequst in patternDefaultDatasFilled['staticData']['request']['preciselyPattern'][markType][codeType]:
+                  for patternsStageRequst in patternsStagesRequst:
+                      for patternStageRequst in patternsStageRequst:
+                          partNumber=True
+                          combinedPattern=[]
+                          pattern=re.compile(patternStageRequst)                                                    
+                          if partNumber==True:                                                    
+                              match=re.match(pattern,generalyRequest)                                                    
+                              partNumber=False                                                    
+                          else:                                                    
+                            match=re.search(pattern,generalyRequest)                                                    
+                          if match:                                                    
+                              combinedPattern.append(patternStageRequst)
+                              break                                                                          
+                                                       
+                      form['requests']['mark'][markType][codeType][idCode]=combinedPattern                                                                        
+    
+
+    #the reading function is actually the function that get the form and the and the blocks the data the function and more in order to perform everything that wanted in the 
+    #blocks and we will insert a new fiture that we will put in some kind of place code the symbols that we want for every shortly thing such as : shorted name to function 
+    #mark... and we will read also this data and perform the thing according to that and also i want to add one more fiture for save any reapitly thing that can happen such
+    #as when we create data base we actually sometime can do the same time for example put saperate things in the between the same anount of organ for example :
+    #we create constitunet list in some kind of place in the data for example in our patternData['requestsListGenerally']['blocks'] we wnat sparate with list 
+    #So for example instead of do this [[[elior],[elior]],[[banda],[banda]]] <- we will do this [elior,elior...] and mark according what we wnat this place in reapitdly 
+    #i.e repeat in order to do tow thing in one list and in big list .
+
+    #So we say that we want to use in to knowledge from the previous data in the code that we got one is the form and after is the patternDefaultDatasFilled (static-data)
+    #So we will work like that actually get the data form the form and my deliberately in this data taking is the requests for every thing that we try to do and every trying 
+    #of requerments that we try to do and every data no just from the form or the "default-static" data that we created may from other thing that can get on when we build and
+    # improve our system and want to perform these thing in the app , because in the our system that requered everything we want to actually perform in the block or in the
+    # result of the system just in the perform function .
+
+    #So in this case we must classes using and according the rules from Banda and to create class for every perform that can get on in the system for example the function 
+    # and more things in order to get on the part of perform that display the data that sended from the request about everything and about spesific thing of course 
+    # according the loop and container that design exactly for this case for comfortable or in the casethat we return the block that we insert to the function 
+    # these and more will insert in exactly place in the class with theory working OOP and in the end the objective is to sent the data all the data that can get happen 
+    # from this function and the classes and more that it contain . for example in the place that contain the data from the "server" or more presicely the place that contain 
+    #any of the report about request or insert , will do like that the class that suit get on and pick the data from the form and more place if needed  and insert this data 
+    #to container and after we can do what we want to this data or get some thing how we want with the method that in this case (class).
+    #In the "pttern-function" we combine the data that we have from the block i.e the data that we check and catch the from the place that contain the consistuent-list 
+    #and in the request for for the spesific doing and sperate to organ group and after we need to catch the return from func that do type of as to function and 
+    #analyze this knowledge and in order to recognize the request to use in it . in the inserting data in the exactly place at the block and the wnated block we need to 
+    #first understand where we need to put/do thing from the place that says the block wnated or the default block (itself) after we need to keep the exactly place in the 
+    #block with the spacial id that this doing have or at least the id that we bring after the keeping doing that knowledge need to prepared in the fundamental function that 
+    #responseability about it in this case the addFormFundamental and after paste the thing or do somthing that setting up in in this case that "perform on the block". 
+    #So the user-interface (that mean how the client will pull out the data and see any result that we want) we must figure out that that true we have a lot of data and 
+    #category to take care about ,but we create a value for user . So according this challenge we need to create cmfort combine place for every data that we get and 
+    # and turn on hendler about , and in this place order every data how we want in order to show it for the client in comfort way may make more functionality in this place
+    # for example make User-Instruction and more and more because this (data-place) that connect with the perform actually display our -> (interface) and the 
+    # perform oop function the back-end that connect with all the thing that did with the turn function (blockSystem) on . So we can say that the interface can do tow
+    # majotity things : one is the function that let the user see in every data that he get and tow is functions that dsign and actually decide about how it can will happen
+    # and how the user will see it according the commened (by the way in every interface this is the approximately stuation that come happen) for example to the situation 
+    # in linux terminal (bush) ->sudo up update <- actually turn on the function that in the design case and after it turn the back end function on and after to design function.
+    #that mean we have tow design function one is the function that translate the commend and simply do the functions and call to the back-end and the function that actually 
+    #design the data about the screan she get the massege from the back-end functions and both not really need argument on the function they just turn on the method that do what
+    #we want and . that mean for example in our Blockfunction we insert block with thing and mark and every thing that requered we will do the form and the design the block and
+    #bring masseges and more after we will do every thing in the client-face in perform function and for every input from user we need ->"interFace function".
+    
+    #In the "perform-function" we also will develop shortly system that will short proccess for the user when he want to do something and that come in tow different way 
+    #one is basically every function that short and do thing more times with function that insert different argument to the next copied and and will do it may in differen way 
+    #and the second is the function that do some similar also with the arguments in spacial place according the choises but it care about keeping function in the system of 
+    #our the ->"blockFunction" and the dictionary and modules in the system if the "coding-langauge" and this type of function can create the thing how we mark with this 
+    #dictionary and the modules for example of this function is can be something like this we use in python and create blockFunction and want to create flask-server in the block
+    #that we create in the function with the function shortly tow according what we said that can work like this : 
+
+    #let's beginning from every part of this proccess and how every part of this in shortly way will come happen . 
+    # So let's beginning from the "import-part" so if we use in second function that responsible on perform function and proccess that base on dectionary and modules from our
+    # blockFunction and on the dictionaries/modules from the langauge and type of code that we used , we first when we see the mark of import in the mark that come 
+    #for do this process and turn the function that i said and that will be something like that 
+    # ((--import (requered one space at least) Flask,,(Tow (,) between differen doing 
+    # ) modules Flask,main,rander_tamplate ,, (the three doing is what we wnat actually to do) "varification" ,, argument number 123456 email zdaci123@gmail.com ,,
+    # submit lestening,, rout-url Banda_varification ,, massege randomSixNumber --))
+
+    # in shortly that how part of flask-server will work for carification to the user that need it in generaly way and we will build actually block or form or somthing 
+    # that we can paste in simply way at the real-block accroding the constructions from the client like how we saw now . 
+    
+    #So now we will understand how the short function that care about short duplicate thing we don't want to cause the client to write the same function,activate a lot of time
+    #when this doings is similar So our deliberately is actually create function that contain and use in more function that connect to this situation , and duplicate things
+    #and doing that we do but in different way for example other argumnet in this copied activate or change the name of the input or some variable in for example of this 
+    #objective function -> "activate-duplecate-function" is may if we want to do the same loop but in every time we run the activate of the loop we will add one to the 
+    #result , (of course will more options of this situation and a lot of functionality for duplicate and more flexability that plan to come happen but in very genersly this
+    # the idea the main of this function) So if we care about the spesific situation that we said -> "we want to do the same
+    #loop but in every time we run the activate of the loop we will add one to the result" ((^duplicate|('idDublicate') 'requerments' |duplicate^)) and the close tap will be:
+    #((^closeDuplicate^))
+    # and for paste the duplicate
+    #((<duplicate| 'idDuplicate' |duplicate>)) <- with this we will 
+    #we plan to create (arguments) in the place that we copy to duplicate -> between "((^duplicate|('idDublicate') 'requerments' |duplicate^))" and ((^closeDuplicate^)) will be
+    #and we will delete the argument in the result of the block but that argument will allow us to insert our aguments do "copied" and that with function mark and more will 
+    #build this system of duplicate . So in our situation we will do some thing like that in order to make it :
+    #((^duplicate|('resultVariable')| duplicate=1 optional(function1(idargument)) |duplicate^)) ordinaryList=[1,2,3,4] enlargeList=[] for number(~ORD argument argumentsId~)
+    #<- the argument that we put will delete and for the duplicate and we in this way put "ordinary" argument that temporary(זמני) for the duplicate about the element or 
+    # something else that (after) the argument 
+    #(continue the task) in ordinaryList : number+=1 enlargeList.append(number) (end) print(enlarge) 
+    #in the "pasteDuplicate" we will change the argument (just change the functions on the same duplicate marks that may need to come happen should be in the requerments in 
+    #duplicate place -> ((^duplicate|('idDublicate') 'requerments' |duplicate^)) the amount of time to duplicate will detemine in the copy or in the requerments also for 
+    #default behavior . (continue to the task) ((^closeDuplicate^)) the copy to some kind of place in the currently block or other will be 
+    #((<duplicate| 'idDuplicate' (argument number+1)|duplicate>)) every time we use in number element it will rise in one i.e in this case we will get instead of 
+    # enlargeList=[2,3,4,5] something like this enlargeList=[3,4,5,6] . 
+    
+    #The subFunction -> the premium function , is actually the function that in the function that consider defualt funtion for recognize like the shortly function (duplicate/
+    #dictionaryModules funtion) or the copy/paste function with default mini-block according what we said , and these subFunction can get happen in them and the delibaretely 
+    #behind it is to cause the function that consider default i.e ordinary and can perform direct in the block and in create more marks or place that consider argument
+    # that will get into to the subFunction and we will perform the subFunction according these arguments that mean for example when we create shortly function for dictionary/
+    #modules and we create import for Flask and after in the place that we write more marks that and use in the module that connect with so these mark of module will perform
+    #according the subFunction and what he get from main-function more example about this can be when we copy some kind of mini-block after we change him and insert things...
+    #so we decide to "turn-on" some functions in the paste request : <--{(blockName,idMiniBlock),(function1(argument1='123'))}--> So what that mean we ask for use in function1 ?
+    #that mean actually this -> (search for argument1 and when you see it paste 123 in this situation and perform the function with this argument (123) and in default condition)
+    #paste the result/s in the same place . Of course every "direct" function have subFunction that they can use on but the rules is keeping and every subFunction+function
+    #depend on arguments that we insert .
